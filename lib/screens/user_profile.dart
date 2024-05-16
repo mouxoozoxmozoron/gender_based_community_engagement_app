@@ -4,7 +4,7 @@ import 'package:gbce/APIV1/api_end_points.dart';
 class UserProfileScreen extends StatelessWidget {
   final Map<String, dynamic> userData;
 
-  UserProfileScreen(this.userData);
+  const UserProfileScreen(this.userData, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class UserProfileScreen extends StatelessWidget {
       backgroundColor: Colors.black.withOpacity(0.5),
       appBar: AppBar(
         backgroundColor: Colors.grey[400],
-        title: Text(
+        title: const Text(
           'Profile',
           style: TextStyle(
             // color: Colors.white,
@@ -46,7 +46,7 @@ class UserProfileScreen extends StatelessWidget {
                   ListTile(
                     title: Text(
                       userData['UserName'],
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14.0,
                         color: Colors.white,
                         fontFamily: 'Poppins',
@@ -57,7 +57,7 @@ class UserProfileScreen extends StatelessWidget {
                   ListTile(
                     title: Text(
                       userData['email'],
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14.0,
                         color: Colors.white,
                         fontFamily: 'Poppins',
@@ -68,7 +68,7 @@ class UserProfileScreen extends StatelessWidget {
                   ListTile(
                     title: Text(
                       userData['Phone'],
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14.0,
                         color: Colors.white,
                         fontFamily: 'Poppins',

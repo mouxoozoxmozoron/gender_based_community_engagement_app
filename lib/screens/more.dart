@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../Componnent/Navigation.dart';
 
-
 void main() {
   runApp(const MaterialApp(
     home: More(),
@@ -24,6 +23,7 @@ class _MoreState extends State<More> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[400],
+      drawer: const NavBar(),
       appBar: AppBar(
         title: const Text("THIS IS THE MORE PAGE"),
         backgroundColor: Colors.grey[800],
@@ -59,21 +59,6 @@ class _MoreState extends State<More> {
           // Any other content can go here in a scrolable container
         ]),
       ),
-
-//IMPORTING THE NAVIGATION BAR
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex:
-            0, // Default value since the More page doesn't track current index
-        onTap: (index) {
-          if (index == 0) {
-            // Navigate back to the Home page
-            Navigator.pop(
-                context); // Pop the current page to return to the previous page
-          }
-        },
-      ),
-
-//End of bottom navigation bar
     );
   }
 }

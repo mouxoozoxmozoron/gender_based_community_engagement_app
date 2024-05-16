@@ -24,6 +24,10 @@ class RoutesClass {
   static String posts = "/posts";
   static String getpostsRoute() => posts;
 
+  static String myhome = "/myhome";
+  static String getmyhomeRoute() => myhome;
+
+//
   static String register = "/register";
   static String getregisterscreenRoute() => register;
 
@@ -41,6 +45,8 @@ class RoutesClass {
     GetPage(page: () => const Login(), name: login),
     GetPage(page: () => const Home(), name: posts),
     GetPage(page: () => const More(), name: more),
-    GetPage(page: ()=> const Community(), name: community),
+    GetPage(page: () => const Community(), name: community),
+    GetPage(page: () => const MyHome(), name: myhome),
   ];
 }
+

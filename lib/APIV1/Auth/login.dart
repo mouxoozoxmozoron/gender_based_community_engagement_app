@@ -1,6 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:gbce/APIV1/API/login_api.dart';
+import 'package:gbce/APIV1/requests/login_api.dart';
 import 'package:gbce/APIV1/Register.dart';
 import 'package:gbce/Componnent/AppBar.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
@@ -38,7 +38,7 @@ class _LoginState extends State<Login> {
           title: 'gbce',
           actions: [
             IconButton(
-              icon: Icon(Icons.search),
+              icon: const Icon(Icons.search),
               onPressed: () {
                 // Handle search action
               },
@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/equality.jpg'),
+                  image: const AssetImage('assets/equality.jpg'),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.grey.withOpacity(
@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         "Login",
                         // style: Theme.of(context).textTheme.headline5,
@@ -82,11 +82,11 @@ class _LoginState extends State<Login> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       
                       TextFormField(
                         controller: _emailController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "Email",
                           hintText: "Enter your email",
                         ),
@@ -101,10 +101,10 @@ class _LoginState extends State<Login> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextFormField(
                         controller: _passwordController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "Password",
                           hintText: "Enter your password",
                         ),
@@ -117,7 +117,7 @@ class _LoginState extends State<Login> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
@@ -155,7 +155,7 @@ class _LoginState extends State<Login> {
                           // Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => Register()),
+                            MaterialPageRoute(builder: (context) => const Register()),
                           );
 
                           Get.offAllNamed(RoutesClass.getregisterscreenRoute());

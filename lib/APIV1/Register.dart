@@ -10,7 +10,7 @@ import 'package:gbce/navigations/routes_configurations.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:gbce/APIV1/API/Register_api.dart';
+import 'package:gbce/APIV1/requests/Register_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';

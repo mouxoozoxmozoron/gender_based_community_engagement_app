@@ -63,7 +63,7 @@ class _MyHomeState extends State<MyHome> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/equality.jpg'),
+                image: const AssetImage('assets/equality.jpg'),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
                   Colors.grey.withOpacity(0.8),

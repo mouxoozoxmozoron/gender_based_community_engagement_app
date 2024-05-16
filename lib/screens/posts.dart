@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:gbce/APIV1/API/profile_api.dart';
+import 'package:gbce/APIV1/requests/profile_api.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
 import 'package:gbce/screens/more.dart';
-import 'package:gbce/screens/userProfile.dart';
+import 'package:gbce/screens/user_profile.dart';
 import 'package:get/get.dart';
 import '/Componnent/Navigation.dart';
 
-import '../APIV1/API/home_api.dart';
+import '../APIV1/requests/home_api.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -18,7 +18,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late List<dynamic> posts;
-  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -47,8 +46,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(0.5),
+      drawer: const NavBar(),
       appBar: AppBar(
         title: const Text('Posts'),
+        centerTitle: true,
         backgroundColor: Colors.grey[400],
       ),
       body: FutureBuilder(
@@ -56,7 +57,7 @@ class _HomeState extends State<Home> {
         builder: (context, snapshot) {
           //LOADING SPINNER IS SET HERE
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           //END OF LOADING SPINNER HERE
           else if (snapshot.hasError) {
@@ -80,7 +81,7 @@ class _HomeState extends State<Home> {
                       //USER INFORMATION
 
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
                         decoration: BoxDecoration(
                           border: Border(
@@ -120,13 +121,13 @@ class _HomeState extends State<Home> {
 
                             // End of GestureDetector
 
-                            SizedBox(width: 8.0),
+                            const SizedBox(width: 8.0),
                             // User's name
                             Text(
                               post['user']['first_name'] +
                                   " " +
                                   post['user']['last_name'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
                                 fontFamily: 'Poppins',
@@ -135,13 +136,6 @@ class _HomeState extends State<Home> {
                           ],
                         ),
                       ),
-
-                      // Divider to separate user information and post content
-                      // Divider(
-                      //   color: Colors.red, // Red divider line
-                      //   height: 1.0,
-                      //   thickness: 1.0,
-                      // ),
 
                       // Post content section
                       Column(
@@ -181,13 +175,13 @@ class _HomeState extends State<Home> {
                                 onPressed: () {
                                   // Handle like button press
                                 },
-                                icon: Icon(Icons.thumb_up),
+                                icon: const Icon(Icons.thumb_up),
                               ),
                               IconButton(
                                 onPressed: () {
                                   // Handle comment button press
                                 },
-                                icon: Icon(Icons.comment),
+                                icon: const Icon(Icons.comment),
                               ),
                             ],
                           ),
@@ -198,24 +192,6 @@ class _HomeState extends State<Home> {
                 );
               },
             );
-          }
-        },
-      ),
-
-      //starting of the bottom navigation bar
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-
-          if (index == 4) {
-            Get.toNamed(RoutesClass.getmorescreenRoute());
-          }
-
-          if (index == 2) {
-            Get.toNamed(RoutesClass.getcommunityRoute());
           }
         },
       ),

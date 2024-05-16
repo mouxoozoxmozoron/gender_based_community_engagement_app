@@ -18,12 +18,11 @@ class Community extends StatefulWidget {
 }
 
 class _MoreState extends State<Community> {
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[400],
+      drawer: const NavBar(),
       appBar: AppBar(
         title: const Text("THIS IS THE COMMUNITY PAGE"),
         backgroundColor: Colors.grey[800],
@@ -58,21 +57,6 @@ class _MoreState extends State<Community> {
 
           // Any other content can go here in a scrolable container
         ]),
-      ),
-
-//IMPORTING THE NAVIGATION BAR
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _currentIndex,
-        // onTap: (index) {
-        //   setState(() {
-        //     _currentIndex = index;
-        //   });
-
-        onTap: (index) {
-          if (index == 2) {
-            Get.toNamed(RoutesClass.getcommunityRoute());
-          }
-        },
       ),
 
 //End of bottom navigation bar
