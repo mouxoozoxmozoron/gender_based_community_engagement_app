@@ -28,10 +28,10 @@ class UserProfileScreen extends StatelessWidget {
               aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
               child: Container(
                 color: Colors.black,
-                child: Image.network(
-                  '${serverUrlPlain}storage/${userData['Photo']}',
-                  fit: BoxFit.cover,
-                ),
+                // child: Image.network(
+                //   '${serverUrlPlain}storage/${userData['Photo']}',
+                //   fit: BoxFit.cover,
+                // ),
               ),
             ),
             // Divider to separate the image from the user information

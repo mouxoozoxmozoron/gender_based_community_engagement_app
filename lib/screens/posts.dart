@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/requests/profile_api.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
-import 'package:gbce/navigations/routes_configurations.dart';
-import 'package:gbce/screens/more.dart';
 import 'package:gbce/screens/user_profile.dart';
 import 'package:get/get.dart';
 import '/Componnent/Navigation.dart';

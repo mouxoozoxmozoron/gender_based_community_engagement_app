@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:gbce/APIV1/Auth/login.dart';
 import 'package:gbce/Componnent/AppBar.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -48,7 +46,7 @@ class _MyHomeState extends State<MyHome> {
     return Scaffold(
       backgroundColor: Colors.grey[400],
       appBar: CustomAppBar(
-        title: 'gbce',
+        title: '',
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -101,34 +99,37 @@ class _MyHomeState extends State<MyHome> {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => Login()),
-                    // );
-                    Get.toNamed(RoutesClass.getloginRoute());
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      Colors.green.shade800,
-                    ),
-                    minimumSize: MaterialStateProperty.all<Size>(
-                      Size(double.infinity, 50),
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => Login()),
+                      // );
+                      Get.toNamed(RoutesClass.getloginRoute());
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.green.shade800,
                       ),
+                      minimumSize: MaterialStateProperty.all<Size>(
+                        Size(double.infinity, 50),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      elevation: MaterialStateProperty.all<double>(6),
                     ),
-                    elevation: MaterialStateProperty.all<double>(6),
-                  ),
-                  child: const Text(
-                    "Login",
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

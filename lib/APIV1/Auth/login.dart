@@ -83,7 +83,6 @@ class _LoginState extends State<Login> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 20),
-                      
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(
@@ -118,35 +117,38 @@ class _LoginState extends State<Login> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.green.shade800,
-                          ), // Background color
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // If form is valid, call login function from the Login class
-                            // widget.login(
-                            //   context,
-                            //   _emailController.text,
-                            //   _passwordController.text,
-                            // );
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.green.shade800,
+                            ), // Background color
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              // If form is valid, call login function from the Login class
+                              // widget.login(
+                              //   context,
+                              //   _emailController.text,
+                              //   _passwordController.text,
+                              // );
 
-                            // If form is valid, call login method from the LoginApi class
-                            LoginApi.login(
-                              context,
-                              _emailController.text,
-                              _passwordController.text,
-                            );
-                          }
-                        },
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
-                            color: Colors.white,
+                              // If form is valid, call login method from the LoginApi class
+                              LoginApi.login(
+                                context,
+                                _emailController.text,
+                                _passwordController.text,
+                              );
+                            }
+                          },
+                          child: const Text(
+                            "Login",
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -155,7 +157,8 @@ class _LoginState extends State<Login> {
                           // Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const Register()),
+                            MaterialPageRoute(
+                                builder: (context) => const Register()),
                           );
 
                           Get.offAllNamed(RoutesClass.getregisterscreenRoute());
@@ -172,10 +175,6 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
-
-
-
-                
               ),
             )),
           ],
