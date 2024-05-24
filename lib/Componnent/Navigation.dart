@@ -1,11 +1,41 @@
 import "package:flutter/material.dart";
 import "package:gbce/APIV1/Auth/logout.dart";
+import "package:gbce/constants/widgets.dart";
 import "package:gbce/navigations/routes_configurations.dart";
-import "package:get/get_navigation/get_navigation.dart";
-import "package:get/utils.dart";
+import 'package:get/get.dart';
+import "package:shared_preferences/shared_preferences.dart";
 
-class NavBar extends StatelessWidget {
+class NavBar extends StatefulWidget {
   const NavBar({super.key});
+
+  @override
+  _NavBarState createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
+  bool groupadminlogedin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserType();
+  }
+
+  Future<void> _checkUserType() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userTypeId = prefs.getString('usertypeId');
+    print('Fetched userTypeId: $userTypeId'); // Debug print statement
+
+    if (userTypeId != null) {
+      successToast('Online user type is: $userTypeId');
+    }
+
+    if (userTypeId == '2') {
+      setState(() {
+        groupadminlogedin = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +59,7 @@ class NavBar extends StatelessWidget {
             decoration: const BoxDecoration(
               color: Colors.purple,
               image: DecorationImage(
-                image: AssetImage('assets/cargo_logo.jpg'),
+                image: AssetImage('assets/equalitycolored.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -81,7 +111,17 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.add),
             title: const Text('New post'),
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(RoutesClass.getnewpostRoute());
+            },
+          ),
+          // if (groupadminlogedin)
+          ListTile(
+            leading: const Icon(Icons.add),
+            title: const Text('New event'),
+            onTap: () {
+              Get.toNamed(RoutesClass.getneweventRoute());
+            },
           ),
           ListTile(
             leading: const Icon(Icons.event_available_outlined),

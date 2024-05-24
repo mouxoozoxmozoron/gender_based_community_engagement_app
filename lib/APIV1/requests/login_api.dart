@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
+import 'package:gbce/constants/widgets.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
 import 'package:gbce/screens/posts.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http; // Import http package
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart'; // Import http package
 
 class LoginApi {
   static Future<void> login(
@@ -26,6 +28,20 @@ class LoginApi {
         // Check if the response contains a user and token
         if (responseBody.containsKey('user') &&
             responseBody.containsKey('token')) {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+          await prefs.setString('token', responseBody['token']);
+          await prefs.setInt('userId', responseBody['user']['id']);
+          await prefs.setInt(
+              'usertypeId', int.parse(responseBody['user']['user_type']));
+
+          final token = prefs.getString('token');
+          // successToast('$token');
+          print('token retrieved from storage:  $token');
+          print('Data saved to SharedPreferences:');
+          print('Token: ${responseBody['token']}');
+          print('User ID: ${responseBody['user']['id']}');
+          print('User Type ID: ${responseBody['user']['user_type']}');
           // Extract user and token
 
           //IN CASE YOU WANT TO USE THESE , UN COMENT

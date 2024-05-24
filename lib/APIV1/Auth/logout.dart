@@ -8,5 +8,6 @@ logoutPage() async {
   await prefs.remove('token');
   // await prefs.remove('usertypeId');
   await prefs.remove('userId');
+  await prefs.remove('usertypeId');
   Get.offAllNamed(RoutesClass.getmyhomeRoute());
 }

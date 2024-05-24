@@ -9,12 +9,17 @@ Future<Map<String, dynamic>> getUserProfile(int userId) async {
     // .get(Uri.parse('http://127.0.0.1:8000/api/Profile?id=$userId'));
     if (response.statusCode == 200) {
       return json.decode(response.body)['user'];
+    }
+    if (response.statusCode == 404) {
+      throw Exception(
+          'Failed to load user profile: ${response.statusCode} - ${response.body}');
     } else {
-      throw Exception('Failed to load user profile: ${response.statusCode}');
+      throw Exception(
+          'Failed to load user profile: ${response.statusCode} - ${response.body}');
     }
   } catch (e) {
     // Handle any errors that occur during the API call
     print('Error fetching user profile: $e');
-    throw Exception('Failed to load user profile');
+    throw Exception('Failed to load user profile, internal server error');
   }
 }

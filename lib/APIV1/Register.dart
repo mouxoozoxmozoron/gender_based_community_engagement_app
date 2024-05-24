@@ -2,13 +2,11 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:gbce/APIV1/Auth/login.dart';
 import 'package:gbce/APIV1/api.dart';
 import 'package:gbce/constants/widgets.dart';
 import 'package:gbce/models/user.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:gbce/APIV1/requests/Register_api.dart';
 import 'package:permission_handler/permission_handler.dart';

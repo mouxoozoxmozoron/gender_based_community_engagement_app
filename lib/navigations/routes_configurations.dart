@@ -2,9 +2,11 @@ import 'package:gbce/APIV1/Auth/login.dart';
 import 'package:gbce/APIV1/Register.dart';
 import 'package:gbce/main.dart';
 import 'package:gbce/screens/community.dart';
+import 'package:gbce/screens/events/create_event.dart';
 import 'package:gbce/screens/home.dart';
 import 'package:gbce/screens/more.dart';
 import 'package:gbce/screens/posts.dart';
+import 'package:gbce/screens/posts/create_post.dart';
 import 'package:gbce/splash_screen.dart';
 import 'package:get/get.dart';
 
@@ -24,10 +26,16 @@ class RoutesClass {
   static String posts = "/posts";
   static String getpostsRoute() => posts;
 
+  static String newpost = "/newpost";
+  static String getnewpostRoute() => newpost;
+
+  static String newevent = "/newevent";
+  static String getneweventRoute() => newevent;
+// Newevent
   static String myhome = "/myhome";
   static String getmyhomeRoute() => myhome;
 
-//
+
   static String register = "/register";
   static String getregisterscreenRoute() => register;
 
@@ -47,6 +55,9 @@ class RoutesClass {
     GetPage(page: () => const More(), name: more),
     GetPage(page: () => const Community(), name: community),
     GetPage(page: () => const MyHome(), name: myhome),
+    GetPage(page: () => const Newpost(), name: newpost),
+    GetPage(page: () => const Newevent(), name: newevent),
+    
   ];
 }
 
