@@ -3,7 +3,6 @@ import "dart:io";
 import "package:flutter/material.dart";
 import "package:gbce/APIV1/api.dart";
 import "package:gbce/APIV1/requests/create_event_request.dart";
-import "package:gbce/APIV1/requests/create_post_request.dart";
 import "package:gbce/Componnent/Navigation.dart";
 import "package:gbce/constants/widgets.dart";
 import "package:gbce/navigations/routes_configurations.dart";
@@ -20,30 +19,23 @@ class Newevent extends StatefulWidget {
 }
 
 class _NewpostState extends State<Newevent> {
+  final int groupId = Get.arguments as int;
   final _formKey = GlobalKey<FormState>();
-
-// {
-// 	"description": "tunategemea kua na event mwezi ujao, tunakuombeni nyote mhudhurie ili kupata elimu juu ya uhusiano baina ya jinsi na maendeleo ya jamii kwa ujumla",
-// 	"location" : "science hub - kijitonyama",
-// 	"title" : "FISHERS WOMEN MEETING IN BAGAMOYO",
-// 	"date" : "{% now 'custom', 'yyyy-MM-dd' %}",
-// 	"time" : "12:00am - 06:pm",
-// 	"image": "{{ _.sampleimg }}"
-// }
 
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController timeController = TextEditingController();
+
   XFile? _image;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(), // Current date as initial date
-      firstDate: DateTime(2000), // Earliest date selectable
-      lastDate: DateTime(2101), // Latest date selectable
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
     );
 
     if (pickedDate != null) {
@@ -120,6 +112,7 @@ class _NewpostState extends State<Newevent> {
         locationController.text,
         dateController.text,
         timeController.text,
+        groupId,
         imageFile,
       );
 
@@ -129,7 +122,8 @@ class _NewpostState extends State<Newevent> {
           postcreated = true;
         });
         successToast('Event created succesfuly');
-        Get.toNamed(RoutesClass.getpostsRoute());
+        // Get.off(RoutesClass.getgroupdetailsRoute());
+        Get.back();
       } else {
         setState(() {
           iseventcreationloading = false;

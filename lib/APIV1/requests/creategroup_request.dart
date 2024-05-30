@@ -6,40 +6,21 @@ import 'package:gbce/APIV1/api_end_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CreatepostRequest {
-  static Future<ApiResponse> createpost(
+class CreategroupRequest {
+  static Future<ApiResponse> createevent(
     BuildContext context,
-    String title,
-    String description,
-    int? groupId,
-    File? imageFile,
+    String name,
   ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
     ApiResponse apiResponse = ApiResponse();
     try {
-      // Convert image file to base64
-      String? base64Image;
-      if (imageFile != null) {
-        List<int> imageBytes = await imageFile.readAsBytes();
-        base64Image = base64Encode(imageBytes);
-      }
-
-      // Print all collected data before making the POST request
-      print('Collected Data:');
-      print('description: $description');
-      print('post title: $title');
-      print('Base64 Image: $base64Image');
-
       // Make POST request to the registration endpoint
       final response = await http.post(
-        Uri.parse(newPost),
+        Uri.parse(newGroup),
         body: json.encode({
-          'title': title,
-          'description': description,
-          'post_image': base64Image,
-          'group_id': groupId,
+          'name': name,
         }),
         headers: {
           'Content-Type': 'application/json',

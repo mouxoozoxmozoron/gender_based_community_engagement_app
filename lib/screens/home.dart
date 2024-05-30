@@ -45,17 +45,7 @@ class _MyHomeState extends State<MyHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[400],
-      appBar: CustomAppBar(
-        title: '',
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Handle search action
-            },
-          ),
-        ],
-      ),
+      appBar: AppBar(),
       body: Stack(
         children: [
           Container(

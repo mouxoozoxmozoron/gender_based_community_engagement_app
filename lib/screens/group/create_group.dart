@@ -2,43 +2,38 @@ import "dart:io";
 
 import "package:flutter/material.dart";
 import "package:gbce/APIV1/api.dart";
-import "package:gbce/APIV1/requests/create_post_request.dart";
+import "package:gbce/APIV1/requests/creategroup_request.dart";
 import "package:gbce/Componnent/Navigation.dart";
 import "package:gbce/constants/widgets.dart";
 import "package:gbce/navigations/routes_configurations.dart";
 import "package:get/get_navigation/get_navigation.dart";
 import "package:get/utils.dart";
-import "package:image_picker/image_picker.dart";
-import "package:permission_handler/permission_handler.dart";
 
-class Newpost extends StatefulWidget {
-  const Newpost({super.key});
+class Newgroup extends StatefulWidget {
+  const Newgroup({super.key});
 
   @override
-  State<Newpost> createState() => _NewpostState();
+  State<Newgroup> createState() => _NewpostState();
 }
 
-class _NewpostState extends State<Newpost> {
-  final int groupId = Get.arguments as int;
+class _NewpostState extends State<Newgroup> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController titleController = TextEditingController();
-  XFile? _image;
+  final TextEditingController nameController = TextEditingController();
 
   void showErrorDialog(BuildContext context, String errorMessage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text(errorMessage),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -46,64 +41,32 @@ class _NewpostState extends State<Newpost> {
     );
   }
 
-//permission checker
-  void _checkPermissionAndPickImage() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    }
-    if (status.isGranted) {
-      _pickImage();
-    }
-  }
-
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = pickedFile;
-      });
-    }
-  }
-
-  bool ispostcreationloading = false;
+  bool iseventcreationloading = false;
   bool postcreated = false;
   String? errors;
-  void createnewPostwithpermisoncheck() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    }
-    if (status.isGranted && _formKey.currentState!.validate()) {
+  void creatinggroup() async {
+    if (_formKey.currentState!.validate()) {
       setState(() {
-        ispostcreationloading = true;
+        iseventcreationloading = true;
       });
       // File? imageFile = _image != null ? File(_image!.path) : null;
-      File? imageFile;
-      if (_image != null) {
-        imageFile = File(_image!.path);
-      }
+
       // ignore: use_build_context_synchronously
-      ApiResponse response = await CreatepostRequest.createpost(
+      ApiResponse response = await CreategroupRequest.createevent(
         context,
-        descriptionController.text,
-        titleController.text,
-        groupId,
-        imageFile,
+        nameController.text,
       );
 
       if (response.error == null) {
         setState(() {
-          ispostcreationloading = false;
+          iseventcreationloading = false;
           postcreated = true;
         });
-        successToast('Post created succesfuly');
-        // Get.toNamed(RoutesClass.getpostsRoute());
-        Get.back();
+        successToast('Group created succesfuly');
+        Get.toNamed(RoutesClass.getcommunityRoute());
       } else {
         setState(() {
-          ispostcreationloading = false;
+          iseventcreationloading = false;
           postcreated = false;
           errors = response.error;
         });
@@ -151,7 +114,7 @@ class _NewpostState extends State<Newpost> {
                     children: [
                       const SizedBox(height: 20),
                       Text(
-                        "New post",
+                        "New Community",
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           color: Colors.grey[800],
@@ -163,72 +126,26 @@ class _NewpostState extends State<Newpost> {
                       const SizedBox(height: 20),
 
                       TextFormField(
-                        controller: titleController,
+                        controller: nameController,
                         decoration: const InputDecoration(
-                          labelText: "Post title",
-                          hintText: "Give title to your post",
+                          labelText: "Group name",
+                          hintText: "Give name for the community",
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Post title must be given';
+                            return 'Group name must be given';
                           }
                           if (value.length < 2) {
-                            return 'Post title must be atleast 2 character';
+                            return 'Group name must be atleast 2 character';
                           }
                           return null;
                         },
                       ),
 
-                      const SizedBox(height: 20),
-
-//last name start here
-                      TextFormField(
-                        controller: descriptionController,
-                        decoration: const InputDecoration(
-                          labelText: "Desription",
-                          hintText: "Privide desription",
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Post desricption is required';
-                          }
-                          if (value.length < 2) {
-                            return 'post desription must be at least 2 character';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-
-//post image
-                      _image != null
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Container(
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: FileImage(File(_image!.path)),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            )
-                          : ElevatedButton(
-                              onPressed: _checkPermissionAndPickImage,
-                              child: const Text(
-                                'Upload post image',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
                       const SizedBox(height: 20),
 
                       //registartion process
-                      ispostcreationloading
+                      iseventcreationloading
                           ? const Center(child: CircularProgressIndicator())
                           : ElevatedButton(
                               style: ButtonStyle(
@@ -236,9 +153,9 @@ class _NewpostState extends State<Newpost> {
                                     MaterialStateProperty.all<Color>(
                                         Colors.green.shade800),
                               ),
-                              onPressed: createnewPostwithpermisoncheck,
+                              onPressed: creatinggroup,
                               child: const Text(
-                                "Publish",
+                                "Create",
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 16,

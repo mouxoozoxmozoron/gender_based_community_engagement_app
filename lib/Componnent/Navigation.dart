@@ -116,22 +116,27 @@ class _NavBarState extends State<NavBar> {
             },
           ),
           // if (groupadminlogedin)
-          ListTile(
-            leading: const Icon(Icons.add),
-            title: const Text('New event'),
-            onTap: () {
-              Get.toNamed(RoutesClass.getneweventRoute());
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.event_available_outlined),
-            title: const Text('Events'),
-            onTap: () {},
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.add),
+          //   title: const Text('New event'),
+          //   onTap: () {
+          //     Get.toNamed(RoutesClass.getneweventRoute());
+          //   },
+          // ),
+
           ListTile(
             leading: const Icon(Icons.groups),
             title: const Text('Community'),
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(RoutesClass.getcommunityRoute());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.groups),
+            title: const Text('Create group'),
+            onTap: () {
+              Get.toNamed(RoutesClass.getnewgroupRoute());
+            },
           ),
           const Divider(),
           ListTile(

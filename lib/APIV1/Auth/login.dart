@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/requests/login_api.dart';
 import 'package:gbce/APIV1/Register.dart';
-import 'package:gbce/Componnent/AppBar.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
 import 'package:get/get.dart';
 
@@ -29,21 +28,14 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-        // appBar: AppBar(
-        //   title: const Text("Login Page"),
-        // ),
-
-        appBar: CustomAppBar(
-          title: 'gbce',
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                // Handle search action
-              },
+        appBar: AppBar(
+          title: const Text(
+            'gbce',
+            style: TextStyle(
+              fontFamily: 'Poppins',
             ),
-          ],
+          ),
+          centerTitle: true,
         ),
         body: Stack(
           children: [

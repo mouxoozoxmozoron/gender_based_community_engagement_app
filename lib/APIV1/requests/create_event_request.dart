@@ -14,6 +14,7 @@ class CreateeventRequest {
     String location,
     String date,
     String time,
+    int? groupid,
     File? imageFile,
   ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,8 +44,8 @@ class CreateeventRequest {
           'date': date,
           'location': location,
           'time': time,
-          'image': base64Image, // Adding the photo property
-          // Add other fields as needed
+          'image': base64Image,
+          'group_id': groupid,
         }),
         headers: {
           'Content-Type': 'application/json',

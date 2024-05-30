@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/requests/profile_api.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
 import 'package:gbce/screens/user_profile.dart';
-import 'package:get/get.dart';
 import '/Componnent/Navigation.dart';
 
 import '../APIV1/requests/home_api.dart';
@@ -16,11 +15,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late List<dynamic> posts;
+  bool ispostavailable = false;
 
   @override
   void initState() {
     super.initState();
-    fetchPosts(); // Call the fetchPosts method when the widget initializes
+    fetchPosts();
   }
 
   Future<void> fetchPosts() async {
@@ -28,6 +28,7 @@ class _HomeState extends State<Home> {
       final fetchedPosts = await PostService.fetchPosts();
       setState(() {
         posts = fetchedPosts;
+        ispostavailable = true;
       });
     } catch (e) {
       print('Error fetching posts: $e');
@@ -36,7 +37,6 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    // Cancel or dispose of any ongoing asynchronous operations
     super.dispose();
   }
 

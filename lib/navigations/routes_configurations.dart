@@ -3,6 +3,9 @@ import 'package:gbce/APIV1/Register.dart';
 import 'package:gbce/main.dart';
 import 'package:gbce/screens/community.dart';
 import 'package:gbce/screens/events/create_event.dart';
+import 'package:gbce/screens/group/create_group.dart';
+import 'package:gbce/screens/group/group_deatails.dart';
+import 'package:gbce/screens/group/group_list.dart';
 import 'package:gbce/screens/home.dart';
 import 'package:gbce/screens/more.dart';
 import 'package:gbce/screens/posts.dart';
@@ -35,9 +38,13 @@ class RoutesClass {
   static String myhome = "/myhome";
   static String getmyhomeRoute() => myhome;
 
-
   static String register = "/register";
   static String getregisterscreenRoute() => register;
+
+  static String newgroup = "/newgroup";
+  static String getnewgroupRoute() => newgroup;
+  static String groupdetails = "/groupdetails";
+  static String getgroupdetailsRoute() => groupdetails;
 
   static String more = "/more";
   static String getmorescreenRoute() => more;
@@ -53,11 +60,12 @@ class RoutesClass {
     GetPage(page: () => const Login(), name: login),
     GetPage(page: () => const Home(), name: posts),
     GetPage(page: () => const More(), name: more),
-    GetPage(page: () => const Community(), name: community),
+    // GetPage(page: () => const Community(), name: community),
+    GetPage(page: () => const Grouplist(), name: community),
     GetPage(page: () => const MyHome(), name: myhome),
     GetPage(page: () => const Newpost(), name: newpost),
     GetPage(page: () => const Newevent(), name: newevent),
-    
+    GetPage(page: () => const Newgroup(), name: newgroup),
+    GetPage(page: () => const Groupdetails(), name: groupdetails),
   ];
 }
-
