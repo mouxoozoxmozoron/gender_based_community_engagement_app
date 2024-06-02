@@ -64,227 +64,230 @@ class _RegisterState extends State<Register> {
             ),
           ),
           SingleChildScrollView(
-            child: Card(
-              color: Colors.grey.shade100.withOpacity(0.7),
-              elevation: 8,
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(height: 20),
-                      Text(
-                        "Register",
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          color: Colors.grey[800],
-                          fontSize: 36,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 20),
-
-                      TextFormField(
-                        controller: _first_nameController,
-                        decoration: InputDecoration(
-                          labelText: "First Name",
-                          hintText: "Enter your first name",
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your first name';
-                          }
-                          if (value.length < 5) {
-                            return 'fist name must be at least 5 characters';
-                          }
-                          return null;
-                        },
-                      ),
-
-                      SizedBox(height: 20),
-
-//last name start here
-                      TextFormField(
-                        controller: _last_nameController,
-                        decoration: InputDecoration(
-                          labelText: "Last Nme",
-                          hintText: "Enter your last name",
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your last name';
-                          }
-                          if (value.length < 5) {
-                            return 'last name must be at least 5 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-
-                      //we need to add gender selection here
-                      FormHelper.dropDownWidgetWithLabel(
-                        context,
-                        "Gender",
-                        "select your gender",
-                        this.genderid,
-                        this.genders,
-                        (onChangedval) {
-                          this.genderid = onChangedval;
-
-                          gender = onChangedval;
-
-                          print("user gender is : $onChangedval");
-                        },
-                        (onValidateval) {
-                          if (onValidateval == null) {
-                            return "please select gender";
-                          }
-                          return null;
-                        },
-                        borderColor: Theme.of(context).primaryColor,
-                        borderFocusColor: Theme.of(context).primaryColor,
-                        borderRadius: 10,
-                        optionLabel: "label",
-                        optionValue: "id",
-                      ),
-
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: "Email",
-                          hintText: "Enter your email",
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                              .hasMatch(value)) {
-                            return 'Please enter a valid email address';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-
-                      //phone number start here
-                      TextFormField(
-                        controller: _phoneController,
-                        decoration: InputDecoration(
-                          labelText: "Phone",
-                          hintText: "Enter your phone number",
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your phone number';
-                          }
-                          if (value.length < 10 || value.length > 12) {
-                            return 'Phone number must be between 10 and 12 digits';
-                          }
-                          if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                            return 'Please enter a valid phone number';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-//end of phone number
-
-//password start here
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: "Password",
-                          hintText: "Enter your password",
-                        ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-//password end here
-
-//password conermation
-                      TextFormField(
-                        controller: _confirmPasswordController,
-                        decoration: InputDecoration(
-                          labelText: "Confirm Password",
-                          hintText: "Re-enter your password",
-                        ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please confirm your password';
-                          }
-                          if (value != _passwordController.text) {
-                            return 'Passwords do not match';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-//end of password confirmation
-
-//profile image
-                      _image != null
-                          ? CircleAvatar(
-                              radius: 120,
-                              backgroundImage: FileImage(File(_image!.path)),
-                            )
-                          : ElevatedButton(
-                              onPressed: _checkPermissionAndPickImage,
-                              child: const Text(
-                                'Select Profile Image',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                      SizedBox(height: 20),
-
-                      //registartion process
-                      isRegistrationLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.green.shade800),
-                              ),
-                              onPressed: _registerWithPermissionCheck,
-                              child: const Text(
-                                "Register",
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                      SizedBox(height: 20),
-
-                      TextButton(
-                        onPressed: () {
-                          Get.offAllNamed(RoutesClass.getloginRoute());
-                        },
-                        child: const Text(
-                          'Login ?',
+            child: Padding(
+              padding: const EdgeInsets.all(10.10),
+              child: Card(
+                color: Colors.grey.shade100.withOpacity(0.7),
+                elevation: 8,
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(height: 20),
+                        Text(
+                          "Register",
                           style: TextStyle(
-                            fontSize: 16,
                             fontFamily: 'Poppins',
-                            color: Color.fromARGB(255, 3, 114, 206),
+                            color: Colors.grey[800],
+                            fontSize: 22,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                      )
-                    ],
+                        SizedBox(height: 20),
+
+                        TextFormField(
+                          controller: _first_nameController,
+                          decoration: InputDecoration(
+                            labelText: "First Name",
+                            hintText: "Enter your first name",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your first name';
+                            }
+                            if (value.length < 5) {
+                              return 'fist name must be at least 5 characters';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        SizedBox(height: 20),
+
+                        //last name start here
+                        TextFormField(
+                          controller: _last_nameController,
+                          decoration: InputDecoration(
+                            labelText: "Last Nme",
+                            hintText: "Enter your last name",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your last name';
+                            }
+                            if (value.length < 5) {
+                              return 'last name must be at least 5 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+
+                        //we need to add gender selection here
+                        FormHelper.dropDownWidgetWithLabel(
+                          context,
+                          "Gender",
+                          "select your gender",
+                          this.genderid,
+                          this.genders,
+                          (onChangedval) {
+                            this.genderid = onChangedval;
+
+                            gender = onChangedval;
+
+                            print("user gender is : $onChangedval");
+                          },
+                          (onValidateval) {
+                            if (onValidateval == null) {
+                              return "please select gender";
+                            }
+                            return null;
+                          },
+                          borderColor: Theme.of(context).primaryColor,
+                          borderFocusColor: Theme.of(context).primaryColor,
+                          borderRadius: 10,
+                          optionLabel: "label",
+                          optionValue: "id",
+                        ),
+
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: "Email",
+                            hintText: "Enter your email",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(value)) {
+                              return 'Please enter a valid email address';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+
+                        //phone number start here
+                        TextFormField(
+                          controller: _phoneController,
+                          decoration: InputDecoration(
+                            labelText: "Phone",
+                            hintText: "Enter your phone number",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+                            if (value.length < 10 || value.length > 12) {
+                              return 'Phone number must be between 10 and 12 digits';
+                            }
+                            if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                              return 'Please enter a valid phone number';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        //end of phone number
+
+                        //password start here
+                        TextFormField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            labelText: "Password",
+                            hintText: "Enter your password",
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        //password end here
+
+                        //password conermation
+                        TextFormField(
+                          controller: _confirmPasswordController,
+                          decoration: InputDecoration(
+                            labelText: "Confirm Password",
+                            hintText: "Re-enter your password",
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please confirm your password';
+                            }
+                            if (value != _passwordController.text) {
+                              return 'Passwords do not match';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        //end of password confirmation
+
+                        //profile image
+                        _image != null
+                            ? CircleAvatar(
+                                radius: 120,
+                                backgroundImage: FileImage(File(_image!.path)),
+                              )
+                            : ElevatedButton(
+                                onPressed: _checkPermissionAndPickImage,
+                                child: const Text(
+                                  'Select Profile Image',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                        SizedBox(height: 20),
+
+                        //registartion process
+                        isRegistrationLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.green.shade800),
+                                ),
+                                onPressed: _registerWithPermissionCheck,
+                                child: const Text(
+                                  "Register",
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                        SizedBox(height: 20),
+
+                        TextButton(
+                          onPressed: () {
+                            Get.offAllNamed(RoutesClass.getloginRoute());
+                          },
+                          child: const Text(
+                            'Login ?',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Poppins',
+                              color: Color.fromARGB(255, 3, 114, 206),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -312,8 +315,7 @@ class _RegisterState extends State<Register> {
     if (pickedFile != null) {
       setState(() {
         _image = pickedFile;
-      }
-      );
+      });
     }
   }
 
@@ -328,9 +330,7 @@ class _RegisterState extends State<Register> {
     if (status.isGranted && _formKey.currentState!.validate()) {
       setState(() {
         isRegistrationLoading = true;
-      }
-      
-      );
+      });
       // File? imageFile = _image != null ? File(_image!.path) : null;
       File? imageFile;
       if (_image != null) {
@@ -369,11 +369,7 @@ class _RegisterState extends State<Register> {
           //paaing variable as an argumment
           successToast(token ?? '');
         }
-      } 
-      
-      
-      
-      else {
+      } else {
         setState(() {
           isRegistrationLoading = false;
           userCreated = false;

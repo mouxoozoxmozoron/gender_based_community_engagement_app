@@ -5,7 +5,6 @@ import "package:gbce/APIV1/api.dart";
 import "package:gbce/APIV1/requests/create_post_request.dart";
 import "package:gbce/Componnent/Navigation.dart";
 import "package:gbce/constants/widgets.dart";
-import "package:gbce/navigations/routes_configurations.dart";
 import "package:get/get_navigation/get_navigation.dart";
 import "package:get/utils.dart";
 import "package:image_picker/image_picker.dart";
@@ -19,8 +18,21 @@ class Newpost extends StatefulWidget {
 }
 
 class _NewpostState extends State<Newpost> {
-  final int groupId = Get.arguments as int;
+  final int? groupId = Get.arguments as int?;
   final _formKey = GlobalKey<FormState>();
+
+
+//  @override
+//   void initState() {
+//     super.initState();
+//     // Set default value to 0 if groupId is null
+//     if (groupId == null) {
+//       setState(() {
+//         groupId = 0;
+//       });
+//     }
+//   }
+
 
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
@@ -117,6 +129,8 @@ class _NewpostState extends State<Newpost> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       // backgroundColor: Colors.black.withOpacity(0.5),
       drawer: const NavBar(),

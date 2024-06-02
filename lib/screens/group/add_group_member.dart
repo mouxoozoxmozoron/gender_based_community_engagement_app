@@ -3,24 +3,24 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/api.dart';
+import 'package:gbce/APIV1/requests/add_group_member.dart';
 import 'package:gbce/constants/widgets.dart';
 import 'package:gbce/models/user.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:gbce/APIV1/requests/Register_api.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class AddgroupMember extends StatefulWidget {
+  const AddgroupMember({Key? key}) : super(key: key);
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<AddgroupMember> createState() => _AddgroupMemberState();
 }
 
-class _RegisterState extends State<Register> {
+class _AddgroupMemberState extends State<AddgroupMember> {
+  final int groupId = Get.arguments as int;
   final _formKey = GlobalKey<FormState>();
   List<dynamic> genders = [];
   String? genderid;
@@ -64,227 +64,216 @@ class _RegisterState extends State<Register> {
             ),
           ),
           SingleChildScrollView(
-            child: Card(
-              color: Colors.grey.shade100.withOpacity(0.7),
-              elevation: 8,
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 20),
-                      Text(
-                        "Add group member",
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          color: Colors.grey[800],
-                          fontSize: 36,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 20),
-
-                      TextFormField(
-                        controller: _first_nameController,
-                        decoration: const InputDecoration(
-                          labelText: "First Name",
-                          hintText: "Enter your first name",
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your first name';
-                          }
-                          if (value.length < 5) {
-                            return 'fist name must be at least 5 characters';
-                          }
-                          return null;
-                        },
-                      ),
-
-                      const SizedBox(height: 20),
-
-//last name start here
-                      TextFormField(
-                        controller: _last_nameController,
-                        decoration: const InputDecoration(
-                          labelText: "Last Nme",
-                          hintText: "Enter your last name",
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your last name';
-                          }
-                          if (value.length < 5) {
-                            return 'last name must be at least 5 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-
-                      //we need to add gender selection here
-                      FormHelper.dropDownWidgetWithLabel(
-                        context,
-                        "Gender",
-                        "select your gender",
-                        this.genderid,
-                        this.genders,
-                        (onChangedval) {
-                          this.genderid = onChangedval;
-
-                          gender = onChangedval;
-
-                          print("user gender is : $onChangedval");
-                        },
-                        (onValidateval) {
-                          if (onValidateval == null) {
-                            return "please select gender";
-                          }
-                          return null;
-                        },
-                        borderColor: Theme.of(context).primaryColor,
-                        borderFocusColor: Theme.of(context).primaryColor,
-                        borderRadius: 10,
-                        optionLabel: "label",
-                        optionValue: "id",
-                      ),
-
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: "Email",
-                          hintText: "Enter your email",
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                              .hasMatch(value)) {
-                            return 'Please enter a valid email address';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-
-                      //phone number start here
-                      TextFormField(
-                        controller: _phoneController,
-                        decoration: const InputDecoration(
-                          labelText: "Phone",
-                          hintText: "Enter your phone number",
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your phone number';
-                          }
-                          if (value.length < 10 || value.length > 12) {
-                            return 'Phone number must be between 10 and 12 digits';
-                          }
-                          if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                            return 'Please enter a valid phone number';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-//end of phone number
-
-//password start here
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: const InputDecoration(
-                          labelText: "Password",
-                          hintText: "Enter your password",
-                        ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-//password end here
-
-//password conermation
-                      TextFormField(
-                        controller: _confirmPasswordController,
-                        decoration: const InputDecoration(
-                          labelText: "Confirm Password",
-                          hintText: "Re-enter your password",
-                        ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please confirm your password';
-                          }
-                          if (value != _passwordController.text) {
-                            return 'Passwords do not match';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-//end of password confirmation
-
-//profile image
-                      _image != null
-                          ? CircleAvatar(
-                              radius: 120,
-                              backgroundImage: FileImage(File(_image!.path)),
-                            )
-                          : ElevatedButton(
-                              onPressed: _checkPermissionAndPickImage,
-                              child: const Text(
-                                'Select Profile Image',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                      const SizedBox(height: 20),
-
-                      //registartion process
-                      isRegistrationLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.green.shade800),
-                              ),
-                              onPressed: _registerWithPermissionCheck,
-                              child: const Text(
-                                "Register",
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                      const SizedBox(height: 20),
-
-                      TextButton(
-                        onPressed: () {
-                          Get.offAllNamed(RoutesClass.getloginRoute());
-                        },
-                        child: const Text(
-                          'Login ?',
+            child: Padding(
+              padding: const EdgeInsets.all(10.10),
+              child: Card(
+                color: Colors.grey.shade100.withOpacity(0.7),
+                elevation: 8,
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 20),
+                        Text(
+                          "Add group member",
                           style: TextStyle(
-                            fontSize: 16,
                             fontFamily: 'Poppins',
-                            color: Color.fromARGB(255, 3, 114, 206),
+                            color: Colors.grey[800],
+                            fontSize: 22,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                      )
-                    ],
+                        const SizedBox(height: 20),
+
+                        TextFormField(
+                          controller: _first_nameController,
+                          decoration: const InputDecoration(
+                            labelText: "First Name",
+                            hintText: "Enter your first name",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your first name';
+                            }
+                            if (value.length < 2) {
+                              return 'fist name must be at least 2 characters';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        //last name start here
+                        TextFormField(
+                          controller: _last_nameController,
+                          decoration: const InputDecoration(
+                            labelText: "Last Nme",
+                            hintText: "Enter your last name",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your last name';
+                            }
+                            if (value.length < 2) {
+                              return 'last name must be at least 2 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        //we need to add gender selection here
+                        FormHelper.dropDownWidgetWithLabel(
+                          context,
+                          "Gender",
+                          "select your gender",
+                          this.genderid,
+                          this.genders,
+                          (onChangedval) {
+                            this.genderid = onChangedval;
+
+                            gender = onChangedval;
+
+                            print("user gender is : $onChangedval");
+                          },
+                          (onValidateval) {
+                            if (onValidateval == null) {
+                              return "please select gender";
+                            }
+                            return null;
+                          },
+                          borderColor: Theme.of(context).primaryColor,
+                          borderFocusColor: Theme.of(context).primaryColor,
+                          borderRadius: 10,
+                          optionLabel: "label",
+                          optionValue: "id",
+                        ),
+
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(
+                            labelText: "Email",
+                            hintText: "Enter your email",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(value)) {
+                              return 'Please enter a valid email address';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        //phone number start here
+                        TextFormField(
+                          controller: _phoneController,
+                          decoration: const InputDecoration(
+                            labelText: "Phone",
+                            hintText: "Enter your phone number",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+                            if (value.length < 10 || value.length > 12) {
+                              return 'Phone number must be between 10 and 12 digits';
+                            }
+                            if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                              return 'Please enter a valid phone number';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        //end of phone number
+
+                        //password start here
+                        TextFormField(
+                          controller: _passwordController,
+                          decoration: const InputDecoration(
+                            labelText: "Password",
+                            hintText: "Enter your password",
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        //password end here
+
+                        //password conermation
+                        TextFormField(
+                          controller: _confirmPasswordController,
+                          decoration: const InputDecoration(
+                            labelText: "Confirm Password",
+                            hintText: "Re-enter your password",
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please confirm your password';
+                            }
+                            if (value != _passwordController.text) {
+                              return 'Passwords do not match';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        //end of password confirmation
+
+                        //profile image
+                        _image != null
+                            ? CircleAvatar(
+                                radius: 120,
+                                backgroundImage: FileImage(File(_image!.path)),
+                              )
+                            : ElevatedButton(
+                                onPressed: _checkPermissionAndPickImage,
+                                child: const Text(
+                                  'Select Profile Image',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                        const SizedBox(height: 20),
+
+                        //registartion process
+                        isRegistrationLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.green.shade800),
+                                ),
+                                onPressed: _registerWithPermissionCheck,
+                                child: const Text(
+                                  "Add",
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -328,13 +317,11 @@ class _RegisterState extends State<Register> {
       setState(() {
         isRegistrationLoading = true;
       });
-      // File? imageFile = _image != null ? File(_image!.path) : null;
       File? imageFile;
       if (_image != null) {
         imageFile = File(_image!.path);
       }
-      // ignore: use_build_context_synchronously
-      ApiResponse response = await RegisterApi.register(
+      ApiResponse response = await Addgroupmember.addgroupmember(
         context,
         _first_nameController.text,
         _last_nameController.text,
@@ -343,36 +330,25 @@ class _RegisterState extends State<Register> {
         _passwordController.text,
         imageFile,
         gender,
+        groupId,
       );
 
       if (response.error == null) {
         setState(() {
           isRegistrationLoading = false;
           userCreated = true;
-          user = response.data as User;
         });
-        //Storing token and user details in local storage
-        //IMPORTANT
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', user!.token);
-        await prefs.setInt('userId', user!.data.id);
-
-        final token = prefs.getString('token');
-
-        //navigation to login
-        Get.offAllNamed(RoutesClass.getpostsRoute());
-
-        if (userCreated) {
-          //paaing variable as an argumment
-          successToast(token ?? '');
-        }
+        successToast('member added succesfully');
+        Get.back();
       } else {
         setState(() {
           isRegistrationLoading = false;
           userCreated = false;
         });
         // errorToast("hello there");
-        errorToast("Not connected !");
+        errorToast("error $response.error");
+        print(response.error);
+        showErrorDialog(context, response.error!);
       }
     }
   }

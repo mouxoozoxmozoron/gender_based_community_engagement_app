@@ -3,6 +3,8 @@ import 'package:gbce/APIV1/api_end_points.dart';
 import 'package:gbce/Componnent/Navigation.dart';
 import 'package:gbce/models/group_by_membership.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
+import 'package:gbce/screens/group/event_booking.dart';
+import 'package:gbce/screens/group/likeordislike.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +21,7 @@ class _GroupdetailsState extends State<Groupdetails> {
   bool isgroupadminlogedin = false;
   bool ispostbuttonclicked = false;
   bool ismembersbuttonclicked = false;
+  bool isliked = false;
   int? userId;
 
   @override
@@ -171,23 +174,31 @@ class _GroupdetailsState extends State<Groupdetails> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      "${user.firstName} ${user.lastName}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      user.email,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: 'Poppins',
-                        color: Colors.black.withOpacity(0.6),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${user.firstName} ${user.lastName}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            user.email,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Poppins',
+                              color: Colors.black.withOpacity(0.6),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(
@@ -232,6 +243,21 @@ class _GroupdetailsState extends State<Groupdetails> {
                       style:
                           const TextStyle(fontSize: 16, fontFamily: 'Poppins'),
                     ),
+                    Text(
+                      event.date.toString(),
+                      style:
+                          const TextStyle(fontSize: 16, fontFamily: 'Poppins'),
+                    ),
+                    Text(
+                      event.time,
+                      style:
+                          const TextStyle(fontSize: 16, fontFamily: 'Poppins'),
+                    ),
+                    Text(
+                      event.location,
+                      style:
+                          const TextStyle(fontSize: 16, fontFamily: 'Poppins'),
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -239,6 +265,7 @@ class _GroupdetailsState extends State<Groupdetails> {
                           child: TextButton(
                               onPressed: () {
                                 print('geting your ticket');
+                                getEventticket(context, event.id.toString());
                               },
                               child: const Text(
                                 'RSVP',
@@ -261,7 +288,6 @@ class _GroupdetailsState extends State<Groupdetails> {
       return SingleChildScrollView(
         child: Column(
           children: group.group!.posts.map((post) {
-            print('im fetching group posts data');
             return Card(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -290,12 +316,21 @@ class _GroupdetailsState extends State<Groupdetails> {
                         const SizedBox(
                           width: 20,
                         ),
+
                         IconButton(
                           onPressed: () {
+                            setState(() {
+                              isliked = true;
+                            });
                             print('liking the post');
+
+                            likeOrdislikeposts(context, post.id.toString());
                           },
                           icon: const Icon(Icons.thumb_up),
+                          color: Colors.blue,
+                          // color: isliked ? Colors.blue : Colors.grey,
                         ),
+                        // userId
                         Text(
                           post.likes.length.toString(),
                           style: const TextStyle(
@@ -338,7 +373,12 @@ class _GroupdetailsState extends State<Groupdetails> {
             child: Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.toNamed(
+                      RoutesClass.getaddgroupmemberRoute(),
+                      arguments: group.group!.id,
+                    );
+                  },
                   icon: const Icon(
                     Icons.group_add,
                     size: 30,
@@ -401,7 +441,7 @@ class _GroupdetailsState extends State<Groupdetails> {
               borderRadius: BorderRadius.zero,
             ),
             child: Text(
-              'Manage your group fromhere',
+              'Manage your group from here',
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 20,

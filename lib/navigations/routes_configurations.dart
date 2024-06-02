@@ -3,6 +3,7 @@ import 'package:gbce/APIV1/Register.dart';
 import 'package:gbce/main.dart';
 import 'package:gbce/screens/community.dart';
 import 'package:gbce/screens/events/create_event.dart';
+import 'package:gbce/screens/group/add_group_member.dart';
 import 'package:gbce/screens/group/create_group.dart';
 import 'package:gbce/screens/group/group_deatails.dart';
 import 'package:gbce/screens/group/group_list.dart';
@@ -51,6 +52,8 @@ class RoutesClass {
 
   static String community = "/community";
   static String getcommunityRoute() => community;
+  static String addgroupmember = "/addgroupmember";
+  static String getaddgroupmemberRoute() => addgroupmember;
 
   static List<GetPage> routes = [
     GetPage(page: () => const InitHome(), name: home),
@@ -67,5 +70,6 @@ class RoutesClass {
     GetPage(page: () => const Newevent(), name: newevent),
     GetPage(page: () => const Newgroup(), name: newgroup),
     GetPage(page: () => const Groupdetails(), name: groupdetails),
+    GetPage(page: () => const AddgroupMember(), name: addgroupmember),
   ];
 }
