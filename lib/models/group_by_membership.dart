@@ -148,6 +148,9 @@ class Post {
     required this.updatedAt,
     required this.comments,
     required this.likes,
+    this.isDisplayingComments = false,
+    this.isCommenting = false,
+    this.issendingcoment = false,
   });
 
   final int id;
@@ -161,6 +164,9 @@ class Post {
   final DateTime? updatedAt;
   final List<Comment> comments;
   final List<Like> likes;
+  bool isDisplayingComments;
+  bool isCommenting;
+  bool issendingcoment;
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
@@ -180,6 +186,9 @@ class Post {
       likes: json["likes"] == null
           ? []
           : List<Like>.from(json["likes"]!.map((x) => Like.fromJson(x))),
+      isDisplayingComments: json["is_displaying_comments"] ?? false,
+      isCommenting: json["is_commenting"] ?? false,
+      issendingcoment: json["is_sendingcoment"] ?? false,
     );
   }
 }
@@ -193,6 +202,8 @@ class Comment {
     required this.createdAt,
     required this.updatedAt,
     required this.replies,
+    this.isreplying = false,
+    this.isshowingreplybutton = false,
   });
 
   final int id;
@@ -202,6 +213,8 @@ class Comment {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final List<Reply> replies;
+  bool isreplying;
+  bool isshowingreplybutton;
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
@@ -214,6 +227,9 @@ class Comment {
       replies: json["replies"] == null
           ? []
           : List<Reply>.from(json["replies"]!.map((x) => Reply.fromJson(x))),
+      isreplying: json["is_repying"] ?? false,
+      isshowingreplybutton: json["is_showingreplybutton"] ?? false,
+
     );
   }
 }
@@ -255,7 +271,6 @@ class Like {
     required this.createdAt,
     required this.updatedAt,
   });
-  
 
   final int id;
   final String postId;

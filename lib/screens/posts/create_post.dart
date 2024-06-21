@@ -21,7 +21,6 @@ class _NewpostState extends State<Newpost> {
   final int? groupId = Get.arguments as int?;
   final _formKey = GlobalKey<FormState>();
 
-
 //  @override
 //   void initState() {
 //     super.initState();
@@ -32,7 +31,6 @@ class _NewpostState extends State<Newpost> {
 //       });
 //     }
 //   }
-
 
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
@@ -129,8 +127,6 @@ class _NewpostState extends State<Newpost> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       // backgroundColor: Colors.black.withOpacity(0.5),
       drawer: const NavBar(),
@@ -169,7 +165,7 @@ class _NewpostState extends State<Newpost> {
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           color: Colors.grey[800],
-                          fontSize: 36,
+                          fontSize: 22,
                         ),
                         textAlign: TextAlign.center,
                       ),

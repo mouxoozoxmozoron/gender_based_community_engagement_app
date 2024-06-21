@@ -9,62 +9,46 @@ import 'package:shared_preferences/shared_preferences.dart'; // Import http pack
 class LoginApi {
   static Future<void> login(
       BuildContext context, String email, String password) async {
-    //I HAVE DEFINED ALL OF MY END POINT INSIDE THE api_end_points FILE AND IMPORT
-    //THEM TO USE IN DIFFERENT FILES
-
     try {
-      // Make POST request to the login endpoint
       final response = await http.post(Uri.parse(loginEndpoint),
           body: json.encode({'email': email, 'password': password}),
           headers: {'Content-Type': 'application/json'});
 
-      // Check if the response status code is 200 (OK)
       if (response.statusCode == 200) {
         // Parse the response body
         Map<String, dynamic> responseBody = json.decode(response.body);
 
-        // Check if the response contains a user and token
         if (responseBody.containsKey('user') &&
             responseBody.containsKey('token')) {
           final SharedPreferences prefs = await SharedPreferences.getInstance();
 
           await prefs.setString('token', responseBody['token']);
           await prefs.setInt('userId', responseBody['user']['id']);
+          await prefs.setString(
+              'profilephotourl', responseBody['user']['photo']);
+          await prefs.setString('firsname', responseBody['user']['first_name']);
+          await prefs.setString('phonenumber', responseBody['user']['phone']);
+          await prefs.setString('lastname', responseBody['user']['last_name']);
+          await prefs.setString('email', responseBody['user']['email']);
+
           await prefs.setInt(
               'usertypeId', int.parse(responseBody['user']['user_type']));
 
-          final token = prefs.getString('token');
-          // successToast('$token');
-          print('token retrieved from storage:  $token');
-          print('Data saved to SharedPreferences:');
-          print('Token: ${responseBody['token']}');
-          print('User ID: ${responseBody['user']['id']}');
-          print('User Type ID: ${responseBody['user']['user_type']}');
-          // Extract user and token
-
-          //IN CASE YOU WANT TO USE THESE , UN COMENT
-          // String user = responseBody['user'];
-          // String token = responseBody['token'];
-
-          // Navigate to Home page or do something else with the user and token
-          // ignore: use_build_context_synchronously
-
           Get.offAllNamed(RoutesClass.getpostsRoute());
         } else {
-          // Show error message if the response does not contain user and token
           // ignore: use_build_context_synchronously
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Error'),
-                content: Text('Invalid response from server.'),
+                title: const Text('Error'),
+                content: const Text('Invalid response from server.'),
                 actions: [
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text('OK'),
+                    child: const Text('OK'),
                   ),
                 ],
               );
@@ -72,20 +56,19 @@ class LoginApi {
           );
         }
       } else {
-        // Show error message if the response status code is not 200
         // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Error'),
-              content: Text('Failed to login. Please try again.'),
+              title: const Text('Error'),
+              content: const Text('Failed to login. Please try again.'),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('OK'),
+                  child: const Text('OK'),
                 ),
               ],
             );
@@ -93,21 +76,19 @@ class LoginApi {
         );
       }
     } catch (e) {
-      // Handle any errors that occur during the API request
-      print('Error: $e');
       // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('An error occurred. Please try again later.'),
+            title: const Text('Error'),
+            content: const Text('An error occurred. Please try again later.'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );

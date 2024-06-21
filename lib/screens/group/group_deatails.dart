@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:gbce/APIV1/api.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
 import 'package:gbce/Componnent/Navigation.dart';
+import 'package:gbce/constants/widgets.dart';
+import 'package:gbce/models/group_by_membership.dart';
 import 'package:gbce/models/group_by_membership.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
+import 'package:gbce/screens/group/coment_post.dart';
 import 'package:gbce/screens/group/event_booking.dart';
 import 'package:gbce/screens/group/likeordislike.dart';
+import 'package:gbce/screens/group/replie_coment.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/group_by_membership.dart';
 
 class Groupdetails extends StatefulWidget {
   const Groupdetails({super.key});
@@ -23,6 +30,9 @@ class _GroupdetailsState extends State<Groupdetails> {
   bool ismembersbuttonclicked = false;
   bool isliked = false;
   int? userId;
+
+  final TextEditingController _commentController = TextEditingController();
+  final TextEditingController _replycontroller = TextEditingController();
 
   @override
   void initState() {
@@ -288,10 +298,13 @@ class _GroupdetailsState extends State<Groupdetails> {
       return SingleChildScrollView(
         child: Column(
           children: group.group!.posts.map((post) {
+            bool isLiked = post.likes.any((like) => like.userId == userId);
+
             return Card(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.network("${serverUrlPlain}storage/${post.postImage}"),
                     const SizedBox(
@@ -316,21 +329,17 @@ class _GroupdetailsState extends State<Groupdetails> {
                         const SizedBox(
                           width: 20,
                         ),
-
                         IconButton(
                           onPressed: () {
                             setState(() {
-                              isliked = true;
+                              isLiked = !isLiked;
                             });
                             print('liking the post');
-
                             likeOrdislikeposts(context, post.id.toString());
                           },
                           icon: const Icon(Icons.thumb_up),
-                          color: Colors.blue,
-                          // color: isliked ? Colors.blue : Colors.grey,
+                          color: isLiked ? Colors.blue : Colors.grey,
                         ),
-                        // userId
                         Text(
                           post.likes.length.toString(),
                           style: const TextStyle(
@@ -342,12 +351,18 @@ class _GroupdetailsState extends State<Groupdetails> {
                         const SizedBox(
                           width: 150,
                         ),
-                        IconButton(
-                          onPressed: () {
-                            print('reading comments');
-                          },
-                          icon: const Icon(Icons.comment),
-                        ),
+                        post.issendingcoment
+                            ? const CircularProgressIndicator()
+                            : IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    post.isDisplayingComments =
+                                        !post.isDisplayingComments;
+                                    post.isCommenting = !post.isCommenting;
+                                  });
+                                },
+                                icon: const Icon(Icons.comment),
+                              ),
                         Text(
                           post.comments.length.toString(),
                           style: const TextStyle(
@@ -358,7 +373,266 @@ class _GroupdetailsState extends State<Groupdetails> {
                         ),
                       ],
                     ),
+                    if (post.isDisplayingComments)
+                      ...post.comments.map((comment) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                comment.isshowingreplybutton =
+                                    !comment.isshowingreplybutton;
+                              });
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Card(
+                                  child: Text(
+                                    comment.message,
+                                    style: const TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 16,
+                                      color: Color.fromARGB(255, 78, 71, 71),
+                                    ),
+                                  ),
+                                ),
+
+                                if (comment.isshowingreplybutton)
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        comment.isreplying =
+                                            !comment.isreplying;
+                                        if (!comment.isreplying) {
+                                          post.isCommenting = true;
+                                        } else {
+                                          post.isCommenting = false;
+                                        }
+                                      });
+                                      // Handle reply action
+                                      print('Reply to comment');
+                                    },
+                                    child: const Text(
+                                      'Reply',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  ),
+
+                                // Render replies associated with the comment
+                                if (comment.replies != null)
+                                  ...comment.replies.map((reply) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20.0, top: 5.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Card(
+                                            // color: Colors.blue,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                reply.message,
+                                                style: const TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 14,
+                                                  color: Colors.blue,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+
+                                // REPLYING START FROM HERE
+                                if (comment.isreplying)
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextField(
+                                            controller: _replycontroller,
+                                            decoration: InputDecoration(
+                                              labelText: 'Write a reply',
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              suffixIcon: IconButton(
+                                                icon: const Icon(
+                                                  Icons.send,
+                                                  color: Colors.blue,
+                                                ),
+                                                onPressed: () async {
+                                                  if (_replycontroller.text
+                                                      .trim()
+                                                      .isNotEmpty) {
+                                                    setState(() {
+                                                      // post.isCommenting = false;
+                                                      // post.issendingcoment = true;
+                                                      // post.isDisplayingComments = false;
+                                                    });
+
+                                                    // Call comentPost and handle the response
+                                                    ApiResponse response =
+                                                        await repliecoment(
+                                                            context,
+                                                            comment.id
+                                                                .toString(),
+                                                            _replycontroller
+                                                                .text);
+
+                                                    // Update the state based on the response
+                                                    setState(() {
+                                                      post.issendingcoment =
+                                                          false;
+                                                      if (response.error ==
+                                                          null) {
+                                                        setState(() {
+                                                          comment.isreplying =
+                                                              false;
+                                                          post.isCommenting =
+                                                              true;
+                                                        });
+                                                        // Comment was successfully posted, update the comments list
+                                                        comment.replies.add(Reply(
+                                                            message:
+                                                                _replycontroller
+                                                                    .text,
+                                                            id: 1,
+                                                            userId: 0,
+                                                            createdAt: null,
+                                                            updatedAt: null,
+                                                            commentId: 0));
+                                                        _replycontroller
+                                                            .clear(); // Clear the input field
+                                                        // successToast('Comment sent');
+                                                        CustomSnackBar.show(
+                                                            context,
+                                                            'Replie sent',
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                            actionLabel: 'OK');
+                                                      } else {
+                                                        // Handle the error case
+                                                        CustomSnackBar.show(
+                                                            context,
+                                                            response.error
+                                                                .toString());
+                                                      }
+                                                    });
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                            'Replie cannot be empty'),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                // REPLYING ENDS HERE
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    if (post.isCommenting)
+                      if (post.isCommenting)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _commentController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Write a comment',
+                                    border: const OutlineInputBorder(),
+                                    suffixIcon: IconButton(
+                                      icon: const Icon(
+                                        Icons.send,
+                                        color: Colors.blue,
+                                      ),
+                                      onPressed: () async {
+                                        if (_commentController.text
+                                            .trim()
+                                            .isNotEmpty) {
+                                          setState(() {
+                                            // post.isCommenting = false;
+                                            post.issendingcoment = true;
+                                            // post.isDisplayingComments = false;
+                                          });
+
+                                          // Call comentPost and handle the response
+                                          ApiResponse response =
+                                              await comentPost(
+                                                  context,
+                                                  post.id.toString(),
+                                                  _commentController.text);
+
+                                          // Update the state based on the response
+                                          setState(() {
+                                            post.issendingcoment = false;
+                                            if (response.error == null) {
+                                              // Comment was successfully posted, update the comments list
+                                              post.comments.add(Comment(
+                                                  message:
+                                                      _commentController.text,
+                                                  id: 1,
+                                                  postId: 0,
+                                                  userId: 0,
+                                                  createdAt: null,
+                                                  updatedAt: null,
+                                                  replies: []));
+                                              _commentController
+                                                  .clear(); // Clear the input field
+                                              // successToast('Comment sent');
+                                              CustomSnackBar.show(
+                                                  context, 'Comment sent',
+                                                  backgroundColor: Colors.green,
+                                                  actionLabel: 'OK');
+                                            } else {
+                                              // Handle the error case
+                                              CustomSnackBar.show(context,
+                                                  response.error.toString());
+                                            }
+                                          });
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Comment cannot be empty'),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                   ],
+//commenting text editing end here
                 ),
               ),
             );
@@ -500,16 +774,16 @@ class _GroupdetailsState extends State<Groupdetails> {
           const SizedBox(
             height: 20,
           ),
-          Card(
-            shape: const RoundedRectangleBorder(
+          const Card(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.zero,
             ),
             child: Text(
               'gbce is there for you',
               style: TextStyle(
                 fontFamily: 'Poppins',
-                fontSize: 30,
-                color: Colors.grey[800],
+                fontSize: 20,
+                color: Colors.blueAccent,
               ),
             ),
           ),

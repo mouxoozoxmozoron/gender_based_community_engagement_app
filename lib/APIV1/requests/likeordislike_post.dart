@@ -6,9 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LikeorDislikepost {
-  static Future<ApiResponse> likeordislikepost(
-    String postId,
-  ) async {
+  static Future<ApiResponse> likeordislikepost(String postId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
@@ -16,9 +14,7 @@ class LikeorDislikepost {
     try {
       final response = await http.post(
         Uri.parse(likeOrdislikeapostendpoint),
-        body: json.encode({
-          'post_id': postId,
-        }),
+        body: json.encode({'post_id': postId}),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -40,7 +36,7 @@ class LikeorDislikepost {
         case 422:
           final errors = jsonDecode(response.body);
           apiResponse.error = errors[errors.keys.elementAt(0)];
-          errorToast('failed to process request');
+          errorToast('Failed to process request');
           break;
         default:
           apiResponse.error = jsonDecode(response.body);

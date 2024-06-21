@@ -56,3 +56,53 @@ void showErrorDialog(BuildContext context, String errorMessage) {
     },
   );
 }
+
+class CustomSnackBar {
+  static void show(BuildContext context, String message,
+      {Color backgroundColor = Colors.red,
+      Color textColor = Colors.white,
+      Color actionTextColor = Colors.yellow,
+      String actionLabel = 'Retry',
+      VoidCallback? action}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(color: textColor),
+        ),
+        backgroundColor: backgroundColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        action: action != null
+            ? SnackBarAction(
+                label: actionLabel,
+                textColor: actionTextColor,
+                onPressed: action,
+              )
+            : null,
+      ),
+    );
+  }
+}
+
+class LinePainter extends CustomPainter {
+  final Offset start;
+  final Offset end;
+
+  LinePainter({required this.start, required this.end});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.grey
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawLine(start, end, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}

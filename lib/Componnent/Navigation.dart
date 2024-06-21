@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:gbce/APIV1/Auth/logout.dart";
+import "package:gbce/APIV1/api_end_points.dart";
 import "package:gbce/constants/widgets.dart";
 import "package:gbce/navigations/routes_configurations.dart";
 import 'package:get/get.dart';
@@ -14,6 +15,10 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   bool groupadminlogedin = false;
+  String fullProfileImageUrl = '';
+  String username = '';
+  String useremail = '';
+  // String serverUrlPlain = 'http://192.168.17.5:8000';
 
   @override
   void initState() {
@@ -23,18 +28,56 @@ class _NavBarState extends State<NavBar> {
 
   Future<void> _checkUserType() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final userTypeId = prefs.getString('usertypeId');
-    print('Fetched userTypeId: $userTypeId'); // Debug print statement
 
-    if (userTypeId != null) {
-      successToast('Online user type is: $userTypeId');
+    // Try to get usertypeId as a string, if it was stored as an int, convert it to a string
+    String? userTypeId;
+    if (prefs.containsKey('usertypeId')) {
+      if (prefs.get('usertypeId') is int) {
+        userTypeId = prefs.getInt('usertypeId')?.toString();
+      } else {
+        userTypeId = prefs.getString('usertypeId');
+      }
     }
+
+    final profileImageUrl = prefs.getString('profilephotourl');
+    final uname = prefs.getString('firsname');
+    final lname = prefs.getString('lastname');
+    final uemail = prefs.getString('email');
+    String profilePhotoUrl = prefs.getString('profilephotourl') ?? '';
+
+    if (profileImageUrl != null && profileImageUrl.isNotEmpty) {
+      setState(() {
+        fullProfileImageUrl =
+            _constructFullImageUrl(serverUrlPlain, 'storage', profilePhotoUrl);
+        username = "$uname $lname";
+        useremail = uemail.toString();
+      });
+    }
+
+    // print('Fetched userTypeId: $userTypeId'); // Debug print statement
+    // print(
+    //     'Full Profile Image URL: $fullProfileImageUrl'); // Debug print statement
+
+    // if (userTypeId != null) {
+    //   successToast('Online user type is: $userTypeId');
+    // }
 
     if (userTypeId == '2') {
       setState(() {
         groupadminlogedin = true;
       });
     }
+  }
+
+  String _constructFullImageUrl(
+      String baseUrl, String storagePath, String photoUrl) {
+    if (baseUrl.endsWith('/')) {
+      baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+    }
+    if (storagePath.startsWith('/')) {
+      storagePath = storagePath.substring(1);
+    }
+    return '$baseUrl/$storagePath/$photoUrl';
   }
 
   @override
@@ -44,16 +87,29 @@ class _NavBarState extends State<NavBar> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text('Mussa Aron'),
-            accountEmail: const Text('mussaaron20@gmail.com'),
+            accountName: Text(username),
+            accountEmail: Text(useremail),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
-                child: Image.network(
-                  'https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg',
-                  height: 90,
-                  width: 90,
-                  fit: BoxFit.cover,
-                ),
+                child: fullProfileImageUrl.isNotEmpty
+                    ? Image.network(
+                        fullProfileImageUrl,
+                        height: 90,
+                        width: 90,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.error,
+                            size: 90,
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        'assets/default_profile.webp', // Provide a default image
+                        height: 90,
+                        width: 90,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             decoration: const BoxDecoration(
@@ -83,31 +139,33 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             leading: const Icon(Icons.person),
             title: const Text('Profile'),
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(RoutesClass.getuserprofileRoute());
+            },
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.notifications),
-            title: const Text('Notification'),
-            trailing: ClipOval(
-              child: Container(
-                color: Colors.red,
-                height: 20,
-                width: 20,
-                child: const Center(
-                  child: Text(
-                    '10',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            onTap: () {},
-          ),
-          const Divider(),
+          // ListTile(
+          //   leading: const Icon(Icons.notifications),
+          //   title: const Text('Notification'),
+          //   trailing: ClipOval(
+          //     child: Container(
+          //       color: Colors.red,
+          //       height: 20,
+          //       width: 20,
+          //       child: const Center(
+          //         child: Text(
+          //           '10',
+          //           style: TextStyle(
+          //             color: Colors.white,
+          //             fontSize: 12,
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          //   onTap: () {},
+          // ),
+          // const Divider(),
           ListTile(
             leading: const Icon(Icons.add),
             title: const Text('New post'),

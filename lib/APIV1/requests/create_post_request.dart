@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CreatepostRequest {
   static Future<ApiResponse> createpost(
     BuildContext context,
-    String title,
     String description,
+    String title,
     int? groupId,
     File? imageFile,
   ) async {

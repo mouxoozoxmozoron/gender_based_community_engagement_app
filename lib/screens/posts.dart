@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/requests/profile_api.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
+import 'package:gbce/models/home_model.dart';
 import 'package:gbce/screens/user_profile.dart';
 import '/Componnent/Navigation.dart';
 
@@ -14,8 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late List<dynamic> posts;
-  bool ispostavailable = false;
+  late List<Post> posts;
+  bool isPostAvailable = false;
 
   @override
   void initState() {
@@ -28,16 +29,11 @@ class _HomeState extends State<Home> {
       final fetchedPosts = await PostService.fetchPosts();
       setState(() {
         posts = fetchedPosts;
-        ispostavailable = true;
+        isPostAvailable = true;
       });
     } catch (e) {
       print('Error fetching posts: $e');
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -50,58 +46,43 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         backgroundColor: Colors.grey[400],
       ),
-      body: FutureBuilder(
-        future: fetchPosts(),
-        builder: (context, snapshot) {
-          //LOADING SPINNER IS SET HERE
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          //END OF LOADING SPINNER HERE
-          else if (snapshot.hasError) {
-            return Center(
-                child: Text('Error fetching data: ${snapshot.error}'));
-          } else {
-            return ListView.builder(
+      body: isPostAvailable
+          ? ListView.builder(
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
 
-                //CONTENT START FROM HERE
                 return Card(
-                  color: Colors.black, // Background color
+                  color: Colors.black,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        0.0), // Set to zero to remove rounded corners
+                    borderRadius: BorderRadius.circular(0.0),
                   ),
                   child: Column(
                     children: [
-                      //USER INFORMATION
-
+                      // User information
                       Container(
                         padding: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
                         decoration: BoxDecoration(
                           border: Border(
-                              bottom: BorderSide(
-                                  color: Colors.white.withOpacity(0.5),
-                                  width: 0.5)), // Red bottom border
+                            bottom: BorderSide(
+                              color: Colors.white.withOpacity(0.5),
+                              width: 0.5,
+                            ),
+                          ),
                         ),
                         child: Row(
                           children: [
-                            // User's profile image
-                            // Start of GestureDetector
+                            // User's profile image with gesture detector
                             GestureDetector(
                               onTap: () async {
                                 try {
-                                  Map<String, dynamic> userData =
-                                      await getUserProfile(post['user']['id']);
-                                  // ignore: use_build_context_synchronously
+                                  // Navigate to user profile screen with user data
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          UserProfileScreen(userData),
+                                          UserProfileScreen(post.user!),
                                     ),
                                   );
                                 } catch (e) {
@@ -111,20 +92,15 @@ class _HomeState extends State<Home> {
                               },
                               child: CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                  '${serverUrlPlain}storage/${post['user']['photo']}',
+                                  '${serverUrlPlain}storage/${post.user!.photo}',
                                 ),
                                 radius: 20.0,
                               ),
                             ),
-
-                            // End of GestureDetector
-
                             const SizedBox(width: 8.0),
                             // User's name
                             Text(
-                              post['user']['first_name'] +
-                                  " " +
-                                  post['user']['last_name'],
+                              '${post.user!.firstName} ${post.user!.lastName}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,
@@ -140,7 +116,7 @@ class _HomeState extends State<Home> {
                         children: [
                           ListTile(
                             title: Text(
-                              post['title'],
+                              post.title,
                               style: const TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 20,
@@ -148,7 +124,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             subtitle: Text(
-                              post['description'],
+                              post.description,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Poppins',
@@ -157,12 +133,11 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                           Image.network(
-                            serverUrlPlain + "storage/${post['post_image']}",
+                            '${serverUrlPlain}storage/${post.postImage}',
                           ),
-                          //DIVIDR BTN POST ANSD THE ACTION UPON
+                          // Divider
                           Divider(
-                            color: Colors.white
-                                .withOpacity(0.5), // Red divider line
+                            color: Colors.white.withOpacity(0.5),
                             height: 0.5,
                             thickness: 1.0,
                           ),
@@ -189,10 +164,8 @@ class _HomeState extends State<Home> {
                   ),
                 );
               },
-            );
-          }
-        },
-      ),
+            )
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }

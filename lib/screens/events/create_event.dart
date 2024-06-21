@@ -5,7 +5,6 @@ import "package:gbce/APIV1/api.dart";
 import "package:gbce/APIV1/requests/create_event_request.dart";
 import "package:gbce/Componnent/Navigation.dart";
 import "package:gbce/constants/widgets.dart";
-import "package:gbce/navigations/routes_configurations.dart";
 import "package:get/get_navigation/get_navigation.dart";
 import "package:get/utils.dart";
 import "package:image_picker/image_picker.dart";
@@ -178,7 +177,7 @@ class _NewpostState extends State<Newevent> {
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           color: Colors.grey[800],
-                          fontSize: 36,
+                          fontSize: 22,
                         ),
                         textAlign: TextAlign.center,
                       ),

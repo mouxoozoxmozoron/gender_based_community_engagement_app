@@ -5,15 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/api.dart';
 import 'package:gbce/APIV1/requests/likeordislike_post.dart';
 
-void likeOrdislikeposts(BuildContext context, String postId) async {
+Future<ApiResponse> likeOrdislikeposts(
+    BuildContext context, String postId) async {
   ApiResponse response = await LikeorDislikepost.likeordislikepost(postId);
-
-  if (response.error == null && response.data != null) {}
+  return response;
 }
-
-
-
-// void getEventticket(BuildContext context, String eventId) async {
-//   // Geteventticket();
-//   showErrorDialog(context, eventId);
-// }

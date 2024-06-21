@@ -1,85 +1,132 @@
 import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
+import 'package:gbce/models/home_model.dart';
 
 class UserProfileScreen extends StatelessWidget {
-  final Map<String, dynamic> userData;
+  final User user;
 
-  const UserProfileScreen(this.userData, {super.key});
+  const UserProfileScreen(this.user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.5),
       appBar: AppBar(
         backgroundColor: Colors.grey[400],
         title: const Text(
           'Profile',
           style: TextStyle(
-            // color: Colors.white,
             fontFamily: 'Poppins',
           ),
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // User's profile image
-            AspectRatio(
-              aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
-              child: Container(
-                color: Colors.black,
-                // child: Image.network(
-                //   '${serverUrlPlain}storage/${userData['Photo']}',
-                //   fit: BoxFit.cover,
-                // ),
-              ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Card(
+            child: Column(
+              children: [
+                // User's profile image
+                AspectRatio(
+                  aspectRatio: 16 / 16,
+                  child: Container(
+                    // color: Colors.black,
+                    height: 400,
+                    width: 400,
+                    child: user.photo.isNotEmpty
+                        ? Image.network(
+                            '${serverUrlPlain}storage/${user.photo}',
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            'assets/default_profile.webp',
+                            fit: BoxFit.cover,
+                          ),
+                  ),
+                ),
+                Divider(color: Colors.white.withOpacity(0.5), thickness: 0.5),
+                // User information
+                Center(
+                  child: Card(
+                    // color: Colors.black,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // User's name
+                        ListTile(
+                          title: Row(
+                            children: [
+                              Text(
+                                '${user.firstName} ${user.lastName}',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ListTile(
+                          title: Row(
+                            children: [
+                              Text(
+                                'Member since: ${user.createdAt}',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: 'Poppins',
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Spacer(),
+                              const Icon(
+                                Icons.verified,
+                                color: Colors.green,
+                                size: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ListTile(
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.email,
+                                color: Colors.grey,
+                                size: 30,
+                              ),
+                              Text(
+                                user.email,
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Poppins'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ListTile(
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.call,
+                                color: Colors.grey,
+                                size: 30,
+                              ),
+                              Text(
+                                user.phone,
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Poppins'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            // Divider to separate the image from the user information
-            Divider(color: Colors.white.withOpacity(0.5), thickness: 0.5),
-            // User information
-            Card(
-              color: Colors.black,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // User's name
-                  ListTile(
-                    title: Text(
-                      userData['UserName'],
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                  // User's email
-                  ListTile(
-                    title: Text(
-                      userData['email'],
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                  // User's phone number
-                  ListTile(
-                    title: Text(
-                      userData['Phone'],
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                  // Add more user information widgets as needed
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

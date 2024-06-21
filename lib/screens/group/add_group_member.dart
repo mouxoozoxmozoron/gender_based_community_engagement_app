@@ -47,7 +47,7 @@ class _AddgroupMemberState extends State<AddgroupMember> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Register"),
+        title: const Text("Add group member"),
       ),
       body: Stack(
         children: [

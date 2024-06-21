@@ -1,44 +1,24 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/api.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CreateeventRequest {
-  static Future<ApiResponse> createevent(
-    BuildContext context,
-    String description,
-    String title,
-    String location,
-    String date,
-    String time,
-    int? groupid,
-    File? imageFile,
+class Repliecomentrequest {
+  static Future<ApiResponse> repliecoment(
+    String comentId,
+    String message,
   ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
     ApiResponse apiResponse = ApiResponse();
     try {
-      // Convert image file to base64
-      String? base64Image;
-      if (imageFile != null) {
-        List<int> imageBytes = await imageFile.readAsBytes();
-        base64Image = base64Encode(imageBytes);
-      }
-
       final response = await http.post(
-        Uri.parse(newEvent),
+        Uri.parse(replieendpointendpoint),
         body: json.encode({
-          'title': title,
-          'description': description,
-          'date': date,
-          'location': location,
-          'time': time,
-          'image': base64Image,
-          'group_id': groupid,
+          'comment_id': comentId,
+          'message': message,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -49,6 +29,7 @@ class CreateeventRequest {
 
       switch (response.statusCode) {
         case 201:
+          apiResponse.data = response.body;
           apiResponse.error = null;
           break;
         case 422:
@@ -59,9 +40,7 @@ class CreateeventRequest {
           apiResponse.error = jsonDecode(response.body);
       }
     } catch (e) {
-      apiResponse.error = "Something went wrong, server intrnal error $e";
-      // Handle errors
-      print('Error: $e');
+      apiResponse.error = "Something went wrong, server internal error $e";
     }
     return apiResponse;
   }

@@ -1,7 +1,6 @@
 import 'package:gbce/APIV1/Auth/login.dart';
 import 'package:gbce/APIV1/Register.dart';
 import 'package:gbce/main.dart';
-import 'package:gbce/screens/community.dart';
 import 'package:gbce/screens/events/create_event.dart';
 import 'package:gbce/screens/group/add_group_member.dart';
 import 'package:gbce/screens/group/create_group.dart';
@@ -11,6 +10,7 @@ import 'package:gbce/screens/home.dart';
 import 'package:gbce/screens/more.dart';
 import 'package:gbce/screens/posts.dart';
 import 'package:gbce/screens/posts/create_post.dart';
+import 'package:gbce/screens/profile.dart';
 import 'package:gbce/splash_screen.dart';
 import 'package:get/get.dart';
 
@@ -50,6 +50,9 @@ class RoutesClass {
   static String more = "/more";
   static String getmorescreenRoute() => more;
 
+  static String profile = "/profile";
+  static String getuserprofileRoute() => profile;
+
   static String community = "/community";
   static String getcommunityRoute() => community;
   static String addgroupmember = "/addgroupmember";
@@ -71,5 +74,6 @@ class RoutesClass {
     GetPage(page: () => const Newgroup(), name: newgroup),
     GetPage(page: () => const Groupdetails(), name: groupdetails),
     GetPage(page: () => const AddgroupMember(), name: addgroupmember),
+    GetPage(page: () => const ProfileViewerPage(), name: profile),
   ];
 }
