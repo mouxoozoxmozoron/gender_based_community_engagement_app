@@ -6,11 +6,13 @@ import 'package:gbce/screens/group/add_group_member.dart';
 import 'package:gbce/screens/group/create_group.dart';
 import 'package:gbce/screens/group/group_deatails.dart';
 import 'package:gbce/screens/group/group_list.dart';
+import 'package:gbce/screens/group/provide_ev_feedback.dart';
 import 'package:gbce/screens/home.dart';
 import 'package:gbce/screens/more.dart';
 import 'package:gbce/screens/posts.dart';
 import 'package:gbce/screens/posts/create_post.dart';
 import 'package:gbce/screens/profile.dart';
+import 'package:gbce/screens/resetpassword/resetpassword.dart';
 import 'package:gbce/splash_screen.dart';
 import 'package:get/get.dart';
 
@@ -55,8 +57,15 @@ class RoutesClass {
 
   static String community = "/community";
   static String getcommunityRoute() => community;
+
   static String addgroupmember = "/addgroupmember";
   static String getaddgroupmemberRoute() => addgroupmember;
+
+  static String providefeedback = "/providefeedback";
+  static String getprovevefeedbackRoute() => providefeedback;
+  
+  static String resetpassword = "/resetpassword";
+  static String getresetpasswordRoute() => resetpassword;
 
   static List<GetPage> routes = [
     GetPage(page: () => const InitHome(), name: home),
@@ -66,7 +75,6 @@ class RoutesClass {
     GetPage(page: () => const Login(), name: login),
     GetPage(page: () => const Home(), name: posts),
     GetPage(page: () => const More(), name: more),
-    // GetPage(page: () => const Community(), name: community),
     GetPage(page: () => const Grouplist(), name: community),
     GetPage(page: () => const MyHome(), name: myhome),
     GetPage(page: () => const Newpost(), name: newpost),
@@ -75,5 +83,7 @@ class RoutesClass {
     GetPage(page: () => const Groupdetails(), name: groupdetails),
     GetPage(page: () => const AddgroupMember(), name: addgroupmember),
     GetPage(page: () => const ProfileViewerPage(), name: profile),
+    GetPage(page: () => const Feedback(), name: providefeedback),
+    GetPage(page: () => const Resetpassword(), name: resetpassword),
   ];
 }

@@ -1,5 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:gbce/APIV1/api.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
+import 'package:gbce/constants/widgets.dart';
+import 'package:gbce/screens/actions/change_password_action.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileViewerPage extends StatefulWidget {
@@ -23,6 +30,9 @@ class _ProfileViewerPageState extends State<ProfileViewerPage> {
   String serverurl = serverUrlPlain;
   bool isdisplayingformfield = false;
   bool ischangingpassword = false;
+  bool isButtonDisabled = false;
+  int remainingTimeInSeconds = 0;
+  Timer? countdownTimer;
 
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
@@ -32,7 +42,42 @@ class _ProfileViewerPageState extends State<ProfileViewerPage> {
   void initState() {
     super.initState();
     _fetchProfileData();
+    _checkLastPasswordChange();
   }
+
+// time checker logics
+  Future<void> _checkLastPasswordChange() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? lastChangeTimestamp = prefs.getInt('lastPasswordChange');
+    if (lastChangeTimestamp != null) {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final diff = now - lastChangeTimestamp;
+      const int buttonHidingTimeInMillis =
+          2 * 60 * 1000; // Two minutes in milliseconds
+
+      if (diff < buttonHidingTimeInMillis) {
+        setState(() {
+          isButtonDisabled = true;
+          remainingTimeInSeconds = (buttonHidingTimeInMillis - diff) ~/ 1000;
+        });
+
+        countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          setState(() {
+            remainingTimeInSeconds--;
+          });
+
+          if (remainingTimeInSeconds <= 0) {
+            timer.cancel();
+            setState(() {
+              isButtonDisabled = false;
+            });
+          }
+        });
+      }
+    }
+  }
+
+// end of time checker logics
 
   Future<void> _fetchProfileData() async {
     _prefs = await SharedPreferences.getInstance();
@@ -66,7 +111,7 @@ class _ProfileViewerPageState extends State<ProfileViewerPage> {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Pofile',
+            'Profile',
             style: TextStyle(
                 fontFamily: 'Poppins', fontSize: 22, color: Colors.blue),
           ),
@@ -119,17 +164,28 @@ class _ProfileViewerPageState extends State<ProfileViewerPage> {
                           const TextStyle(fontSize: 18, fontFamily: 'Poppins'),
                     ),
                     const SizedBox(height: 30),
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            isdisplayingformfield = !isdisplayingformfield;
-                          });
-                          print('Update Profile button clicked');
-                        },
-                        child: isdisplayingformfield
-                            ? const Text('Cancel')
-                            : const Text('Change password')),
 
+                    if (!isButtonDisabled)
+                      TextButton(
+                          onPressed: () {
+                            setState(() {
+                              isdisplayingformfield = !isdisplayingformfield;
+                            });
+                            print('Update Profile button clicked');
+                          },
+                          child: isdisplayingformfield
+                              ? const Text('Cancel')
+                              : const Text('Change password')),
+
+                    if (isButtonDisabled)
+                      Text(
+                        'You can update your password after  ${remainingTimeInSeconds ~/ 60} minutes ${remainingTimeInSeconds % 60} seconds',
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                        ),
+                      ),
                     // start of form
                     if (isdisplayingformfield)
                       Form(
@@ -172,16 +228,62 @@ class _ProfileViewerPageState extends State<ProfileViewerPage> {
                             ischangingpassword
                                 ? const CircularProgressIndicator()
                                 : ElevatedButton(
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
                                       if (_formKey.currentState?.validate() ==
                                           true) {
                                         setState(() {
                                           ischangingpassword = true;
                                         });
-                                        print(
-                                            'Old Password: ${_oldPasswordController.text}');
-                                        print(
-                                            'New Password: ${_newPasswordController.text}');
+
+                                        ApiResponse response =
+                                            await changepassaction(
+                                                context,
+                                                _oldPasswordController.text,
+                                                _newPasswordController.text);
+
+                                        if (response.error == null) {
+                                          setState(() {
+                                            isButtonDisabled = true;
+                                            ischangingpassword = false;
+                                            isdisplayingformfield = false;
+                                            remainingTimeInSeconds = 2 * 60;
+                                          });
+
+                                          prefs.setInt(
+                                              'lastPasswordChange',
+                                              DateTime.now()
+                                                  .millisecondsSinceEpoch);
+                                          _oldPasswordController.clear();
+                                          _newPasswordController.clear();
+
+                                          CustomSnackBar.show(
+                                              context, 'Password changed',
+                                              backgroundColor: Colors.green,
+                                              actionLabel: 'OK');
+
+                                          countdownTimer = Timer.periodic(
+                                              const Duration(seconds: 1),
+                                              (timer) {
+                                            setState(() {
+                                              remainingTimeInSeconds--;
+                                            });
+
+                                            if (remainingTimeInSeconds <= 0) {
+                                              timer.cancel();
+                                              setState(() {
+                                                isButtonDisabled = false;
+                                              });
+                                            }
+                                          });
+                                        } else {
+                                          setState(() {
+                                            ischangingpassword = false;
+                                          });
+                                          CustomSnackBar.show(context,
+                                              response.error.toString());
+                                        }
                                       }
                                     },
                                     child: const Text('Request'),

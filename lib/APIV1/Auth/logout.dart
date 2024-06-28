@@ -9,5 +9,10 @@ logoutPage() async {
   await prefs.remove('profilephotourl');
   await prefs.remove('userId');
   await prefs.remove('usertypeId');
+  await prefs.remove('profilephotourl');
+  await prefs.remove('firsname');
+  await prefs.remove('lastname');
+  await prefs.remove('phonenumber');
+  await prefs.remove('email');
   Get.offAllNamed(RoutesClass.getmyhomeRoute());
 }

@@ -4,7 +4,6 @@ import 'package:gbce/APIV1/api_end_points.dart';
 import 'package:gbce/Componnent/Navigation.dart';
 import 'package:gbce/constants/widgets.dart';
 import 'package:gbce/models/group_by_membership.dart';
-import 'package:gbce/models/group_by_membership.dart';
 import 'package:gbce/navigations/routes_configurations.dart';
 import 'package:gbce/screens/group/coment_post.dart';
 import 'package:gbce/screens/group/event_booking.dart';
@@ -12,8 +11,6 @@ import 'package:gbce/screens/group/likeordislike.dart';
 import 'package:gbce/screens/group/replie_coment.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../models/group_by_membership.dart';
 
 class Groupdetails extends StatefulWidget {
   const Groupdetails({super.key});
@@ -285,6 +282,24 @@ class _GroupdetailsState extends State<Groupdetails> {
                                 ),
                               )),
                         ),
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              // successToast(event.id.toString());
+                              Get.toNamed(
+                                RoutesClass.getprovevefeedbackRoute(),
+                                arguments: event.id.toString(),
+                              );
+                            },
+                            child: const Text(
+                              'Feedback',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -512,7 +527,7 @@ class _GroupdetailsState extends State<Groupdetails> {
                                                             updatedAt: null,
                                                             commentId: 0));
                                                         _replycontroller
-                                                            .clear(); // Clear the input field
+                                                            .clear();
                                                         // successToast('Comment sent');
                                                         CustomSnackBar.show(
                                                             context,

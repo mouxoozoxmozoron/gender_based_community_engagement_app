@@ -143,6 +143,19 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           TextButton(
+                              onPressed: () {
+                                Get.toNamed(
+                                    RoutesClass.getresetpasswordRoute());
+                              },
+                              child: const Text(
+                                "Forgot password?",
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 3, 114, 206),
+                                ),
+                              )),
+                          TextButton(
                             onPressed: () {
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
                               Navigator.pushReplacement(

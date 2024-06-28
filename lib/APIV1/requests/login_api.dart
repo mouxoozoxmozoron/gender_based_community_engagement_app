@@ -55,14 +55,29 @@ class LoginApi {
             },
           );
         }
-      } else {
+      } else if (response.statusCode == 401) {
         // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Error'),
-              content: const Text('Failed to login. Please try again.'),
+              iconColor: Colors.red,
+              title: const Text(
+                'Error',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                ),
+              ),
+              content: const Text(
+                'Incorrect email or password.',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontFamily: 'Poppins',
+                  fontSize: 12,
+                ),
+              ),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -81,7 +96,14 @@ class LoginApi {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error'),
+            title: const Text(
+              'Error',
+              style: TextStyle(
+                color: Colors.red,
+                fontFamily: 'Poppins',
+                fontSize: 12,
+              ),
+            ),
             content: const Text('An error occurred. Please try again later.'),
             actions: [
               TextButton(

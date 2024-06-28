@@ -98,8 +98,8 @@ class _RegisterState extends State<Register> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your first name';
                             }
-                            if (value.length < 5) {
-                              return 'fist name must be at least 5 characters';
+                            if (value.length < 2) {
+                              return 'fist name must be at least 2 characters';
                             }
                             return null;
                           },
@@ -118,8 +118,8 @@ class _RegisterState extends State<Register> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your last name';
                             }
-                            if (value.length < 5) {
-                              return 'last name must be at least 5 characters';
+                            if (value.length < 2) {
+                              return 'last name must be at least 2 characters';
                             }
                             return null;
                           },

@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:gbce/APIV1/Auth/logout.dart";
 import "package:gbce/APIV1/api_end_points.dart";
-import "package:gbce/constants/widgets.dart";
 import "package:gbce/navigations/routes_configurations.dart";
 import 'package:get/get.dart';
 import "package:shared_preferences/shared_preferences.dart";
@@ -18,7 +17,6 @@ class _NavBarState extends State<NavBar> {
   String fullProfileImageUrl = '';
   String username = '';
   String useremail = '';
-  // String serverUrlPlain = 'http://192.168.17.5:8000';
 
   @override
   void initState() {
@@ -53,14 +51,6 @@ class _NavBarState extends State<NavBar> {
         useremail = uemail.toString();
       });
     }
-
-    // print('Fetched userTypeId: $userTypeId'); // Debug print statement
-    // print(
-    //     'Full Profile Image URL: $fullProfileImageUrl'); // Debug print statement
-
-    // if (userTypeId != null) {
-    //   successToast('Online user type is: $userTypeId');
-    // }
 
     if (userTypeId == '2') {
       setState(() {
@@ -105,7 +95,7 @@ class _NavBarState extends State<NavBar> {
                         },
                       )
                     : Image.asset(
-                        'assets/default_profile.webp', // Provide a default image
+                        'assets/cargoprofile.jpeg', // Provide a default image
                         height: 90,
                         width: 90,
                         fit: BoxFit.cover,
@@ -129,6 +119,7 @@ class _NavBarState extends State<NavBar> {
               ),
             ),
           ),
+
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home'),
