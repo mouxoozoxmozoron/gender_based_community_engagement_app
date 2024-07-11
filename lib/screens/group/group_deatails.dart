@@ -109,8 +109,7 @@ class _GroupdetailsState extends State<Groupdetails> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  print('Post button pressed');
-
+                  // print('Post button pressed');
                   setState(() {
                     iseventbuttonclicked = false;
                     ismembersbuttonclicked = false;
@@ -152,7 +151,6 @@ class _GroupdetailsState extends State<Groupdetails> {
             ],
           ),
 
-          // Expanded widget to make the remaining content scrollable
           Expanded(
             child: getContent(),
           ),
@@ -403,12 +401,14 @@ class _GroupdetailsState extends State<Groupdetails> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Card(
+                                  color: Colors.blue,
                                   child: Text(
                                     comment.message,
                                     style: const TextStyle(
                                       fontFamily: 'Poppins',
-                                      fontSize: 16,
-                                      color: Color.fromARGB(255, 78, 71, 71),
+                                      fontSize: 14,
+                                      // color: Color.fromARGB(255, 78, 71, 71),
+                                      // color: Colors.white
                                     ),
                                   ),
                                 ),
@@ -448,7 +448,7 @@ class _GroupdetailsState extends State<Groupdetails> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Card(
-                                            // color: Colors.blue,
+                                            color: Colors.blue,
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
@@ -457,7 +457,7 @@ class _GroupdetailsState extends State<Groupdetails> {
                                                 style: const TextStyle(
                                                   fontFamily: 'Poppins',
                                                   fontSize: 14,
-                                                  color: Colors.blue,
+                                                  // color: Colors.blue,
                                                 ),
                                               ),
                                             ),

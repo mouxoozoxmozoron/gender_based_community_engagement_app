@@ -17,12 +17,9 @@ import 'package:gbce/splash_screen.dart';
 import 'package:get/get.dart';
 
 class RoutesClass {
-  //home
   static String home = "/";
   static String getHomeRoute() => home;
 
-//
-//splash
   static String splashscreen = "/splash_screen";
   static String getsplashscreenRoute() => splashscreen;
 
@@ -63,13 +60,12 @@ class RoutesClass {
 
   static String providefeedback = "/providefeedback";
   static String getprovevefeedbackRoute() => providefeedback;
-  
+
   static String resetpassword = "/resetpassword";
   static String getresetpasswordRoute() => resetpassword;
 
   static List<GetPage> routes = [
     GetPage(page: () => const InitHome(), name: home),
-    //any other routes goes here
     GetPage(page: () => const SplashScreen(), name: splashscreen),
     GetPage(page: () => const Register(), name: register),
     GetPage(page: () => const Login(), name: login),

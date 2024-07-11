@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gbce/APIV1/requests/profile_api.dart';
 import 'package:gbce/APIV1/api_end_points.dart';
 import 'package:gbce/models/home_model.dart';
 import 'package:gbce/screens/user_profile.dart';
@@ -39,7 +38,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.5),
+      // backgroundColor: Colors.black.withOpacity(0.5),
       drawer: const NavBar(),
       appBar: AppBar(
         title: const Text('Posts'),
@@ -53,7 +52,7 @@ class _HomeState extends State<Home> {
                 final post = posts[index];
 
                 return Card(
-                  color: Colors.black,
+                  // color: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0.0),
                   ),
@@ -102,7 +101,7 @@ class _HomeState extends State<Home> {
                             Text(
                               '${post.user!.firstName} ${post.user!.lastName}',
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 16.0,
                                 fontFamily: 'Poppins',
                               ),
@@ -120,13 +119,13 @@ class _HomeState extends State<Home> {
                               style: const TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 20,
-                                color: Colors.grey,
+                                color: Colors.black,
                               ),
                             ),
                             subtitle: Text(
                               post.description,
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontFamily: 'Poppins',
                                 fontSize: 12,
                               ),
@@ -150,11 +149,27 @@ class _HomeState extends State<Home> {
                                 },
                                 icon: const Icon(Icons.thumb_up),
                               ),
+                              Text(
+                                post.likes.length.toString(),
+                                style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
+                                  color: Colors.blue,
+                                ),
+                              ),
                               IconButton(
                                 onPressed: () {
                                   // Handle comment button press
                                 },
                                 icon: const Icon(Icons.comment),
+                              ),
+                              Text(
+                                post.comments.length.toString(),
+                                style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
+                                  color: Colors.blue,
+                                ),
                               ),
                             ],
                           ),

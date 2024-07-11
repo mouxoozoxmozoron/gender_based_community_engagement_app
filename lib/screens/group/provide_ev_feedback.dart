@@ -1,14 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gbce/APIV1/api.dart';
 import 'package:gbce/APIV1/requests/provide_ev_fdbrequest.dart';
 import 'package:gbce/constants/widgets.dart';
-import 'package:gbce/navigations/routes_configurations.dart';
 import 'package:get/get.dart';
-
 import 'package:permission_handler/permission_handler.dart';
 
 class Feedback extends StatefulWidget {
@@ -123,7 +120,6 @@ class _FeedbackState extends State<Feedback> {
                                     Colors.green.shade800,
                                   ),
                                 ),
-                                // onPressed: _sendingfeedbackwithpermisioncheck,
                                 onPressed: () {
                                   if (_report == null) {
                                     CustomSnackBar.show(
@@ -154,7 +150,6 @@ class _FeedbackState extends State<Feedback> {
     );
   }
 
-  // Permission handler for document picking
   void _checkPermissionAndPickDocument() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
@@ -185,8 +180,6 @@ class _FeedbackState extends State<Feedback> {
     }
 
     if (status.isGranted && _formKey.currentState!.validate()) {
-      // Perform your registration logic here, using _report as needed
-      // For example, you can pass _report to your API call for feedback submission
       issendingfeedback = true;
       ApiResponse response =
           await Providefeedback.providefeedback(context, eventId, _report);

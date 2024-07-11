@@ -14,7 +14,7 @@ void getEventticket(BuildContext context, String eventId) async {
   if (response.error == null && response.data != null) {
     if (response.data is List<int>) {
       List<int> pdfBytes = response.data as List<int>;
-      successToast('PDF created successfully');
+      // successToast('PDF created successfully');
       await saveAndOpenPdf(context, pdfBytes, 'event_ticket.pdf');
     } else {
       errorToast('Invalid PDF data');
@@ -40,11 +40,3 @@ Future<void> saveAndOpenPdf(
     print('Error saving or opening PDF: $e');
   }
 }
-
-
-
-
-// void getEventticket(BuildContext context, String eventId) async {
-//   // Geteventticket();
-//   showErrorDialog(context, eventId);
-// }
