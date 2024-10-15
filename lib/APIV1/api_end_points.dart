@@ -1,11 +1,11 @@
-//SERVER URL DECLARATION
-const serverUrl = 'http://192.168.160.5:8000/api/';
-const serverUrlPlain = 'http://192.168.160.5:8000/';
+const serverUrl = 'http://192.168.81.5:8000/api/';
+const serverUrlPlain = 'http://192.168.81.5:8000/';
 const String loginEndpoint = '${serverUrl}auth/login';
 const homeController = '${serverUrl}gbcehome';
 const newPost = '${serverUrl}posts';
 const newEvent = '${serverUrl}event';
 const newGroup = '${serverUrl}group';
+const getOrganisations = '${serverUrl}organisation';
 const eventticketendpoint = '${serverUrl}booking';
 const comentendpoint = '${serverUrl}Comments';
 const providefeedbackreport = '${serverUrl}Feedback';
